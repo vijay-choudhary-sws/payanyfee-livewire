@@ -13,6 +13,7 @@ class Paymentsetting extends Model
     protected $fillable = [
         'title','slug','email','cc_email','bcc_email','status'
     ];
+    
     public function sluggable(): array
     {
         return [

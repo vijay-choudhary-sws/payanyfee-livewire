@@ -11,7 +11,7 @@
                   <div class="ms-auto text-end col-3">
                      <div class="btn-group AddbtnPadding">
                         <button wire:click="create" class="btn btn-primary mt-2 mt-lg-0 mb-">
-                        Edit Field
+                        Add Field
                         </button>
                      </div>
                   </div>
@@ -25,26 +25,28 @@
          <div class="absolute inset-0 bg-black opacity-50"></div>
          <div class="relative bg-gray-200 p-8 rounded shadow-lg w-1/2">
             <!-- Modal content goes here -->
-            <h2 class="text-2xl font-bold mb-4">Edit </h2>
+            <h2 class="text-2xl font-bold mb-4">Edit  Field</h2>
+            <form wire:submit.prevent="store">
             <div class="mb-4">
                <label for="edit-label" class="block text-gray-700 font-bold mb-2">Label</label>
-               <input type="text" wire:model="editedLabel" id="edit-label" class="form-control" placeholder="Enter Name">
-               @error('editedLabel') <span class="text-danger">{{ $message }}</span>@enderror
+               <input type="text" wire:model="label" id="edit-label" class="form-control" placeholder="Enter Name">
+               @error('label') <span class="text-danger">{{ $message }}</span>@enderror
             </div>
             <div class="mb-4">
                <label for="edit-label" class="block text-gray-700 font-bold mb-2">Type</label>
-               <select id="edit-label" class="form-control single-select" name="edit-select" wire:model="editedSelect">
+               <select id="edit-label" class="form-control single-select" wire:model="select_type">
                    <option value="">--Select Field--</option>
                    @foreach($Editfields as $item)
                        <option value="{{ $item->text }}">{{ $item->text }}</option>
                    @endforeach
                </select>
-               @error('editedSelect') <span class="text-danger">{{ $message }}</span>@enderror
+               @error('select_type') <span class="text-danger">{{ $message }}</span>@enderror
            </div>
             <div class="flex justify-end">
-               <button wire:click="create" type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Save</button>
+               <button wire:click="store" type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Save</button>
                <button type="button" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" wire:click="close">Cancel</button>
             </div>
+            </form>
          </div>
       </div>
       @endif
@@ -88,6 +90,152 @@
                   </div>
                </div>
             </div>
+            @foreach($paymentsetting_meta as $paymentsetting)
+            {{-- <?php//  echo"<pre>";print_r($paymentsetting);die; ?> --}}
+
+            <div class="col-md-6">
+                <div class="frmInputGroup">
+                <label class="form-label">{{ $paymentsetting->meta_key }}<sup class="text-danger">*</sup></label>
+               @if($paymentsetting->metaType == 'input')
+               <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+                <input class="form-control" id = "formInput" type = "text" value = "{{ $paymentsetting->meta_value }}" wire:model="input_fileds[]" >
+                <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+                </div>
+
+               @elseif($paymentsetting->metaType == 'textArea')
+
+               <div class="d-flex" style="gap:10px">
+                <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+                <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <textarea class="form-control" id="exampleFormControlTextarea4" rows="3" wire:model="input_fileds[]">{{ $paymentsetting->meta_value }}</textarea>
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+
+               </div>
+               @elseif($paymentsetting->metaType == 'number' || $paymentsetting->metaType == 'tel')
+
+               <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+               <input class="form-control" id = "formInput" type = "number" value = "{{ $paymentsetting->meta_value }}" wire:model="input_fileds[]" >
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+
+               </div>
+               @elseif($paymentsetting->metaType == 'email')
+
+               <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+               <input class="form-control" id = "formInput" type = "email" value = "{{ $paymentsetting->meta_value }}" wire:model="input_fileds[]" >
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+
+               </div>
+
+               @elseif($paymentsetting->metaType == 'checkBoxes')
+               <?php //echo "<pre>";print_r($paymentsetting->meta_value);die; ?>
+               <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+               <input type ="checkbox" value = "{{ $paymentsetting->metaType }}" wire:model="input_fileds[]" @if($paymentsetting->meta_value == $paymentsetting->meta_value){{ "checked" }} @endif>
+      
+               </div>
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+
+               </div>
+               @elseif($paymentsetting->metaType == 'select')
+               <input type="hidden" wire:model="input_fields_select_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_select_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+               <select class="select form-control" wire:model="input_fileds_select[]" required>
+                  <option value="">Select {{ $paymentsetting->meta_key }}</option>
+                  @foreach($inputselectdatas as $inputselectdata)
+                  <option @if($paymentsetting->meta_value == $inputselectdata->selectTitle){{ "selected" }} @endif value="{{ $inputselectdata->selectTitle }}">{{ str_replace('_', ' ', $inputselectdata->selectTitle) }} </option>
+                  @endforeach
+               </select>
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+
+               </div>
+               
+                 @elseif($paymentsetting->metaType == 'date')
+               <input type="hidden" wire:model="input_fields_key[]" value="{{ $paymentsetting->meta_key }}">
+               <input type="hidden" wire:model="input_fields_type[]" value="{{ $paymentsetting->metaType }}">
+               <div class="d-flex" style="gap:10px">
+                  <input class="form-control" type="date" value="{{$paymentsetting->meta_value}}" wire:model="input_fileds[]">
+               </div>
+               <div class="btn btn-danger"><button wire:click="Inputdelete('{{ $paymentsetting->meta_key }}', '{{ $paymentsetting->metaType }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+               </div>
+               @endif
+                </div>
+             </div>
+             @endforeach
+
+             @foreach($Fields as $field)
+             @if($field->select_type == 'Selection')
+             <div class="col-md-5">
+              <div class="form-group my-3">
+               <label class="form-label">{{$field->label}}</label>
+               <input type="hidden" wire:model="input_fields_select_key[]" value="{{$field->label}}">
+               <input type="hidden" wire:model="input_fields_select_type[]" value="{{$field->label}}">
+               
+                 <select name="paymentsel" class="{{$class}} basicUsageSelect" wire:model="input_fileds_select[]">
+                   <option value="">--Select--</option>
+                   @foreach($inputselectdatas as $Inputselect)
+                   <option value="{{$Inputselect->id}}">{{$Inputselect->selectTitle}}</option>
+                   @endforeach 
+                </select>
+              </div>
+             
+            </div>
+            <div class="col-1 py-5">
+               <div class="btn btn-danger"><button wire:click="Inputdeletedg('{{ $field->label }}', '{{ $field->select_type }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+               </div>
+           </div>
+            @elseif($field->select_type == 'Text Area')
+            <div class="col-md-5">
+               <div class="form-group my-3">
+                 <label class="form-label">{{$field->label}}</label>
+                  <input type="hidden" wire:model="input_fields_key[]" value="{{$field->label}}">
+                  <input type="hidden" wire:model="input_fields_type[]" value="{{$field->select_type}}">
+                   <textarea class="{{$class}}" id="exampleFormControlTextarea4" rows="2" name="input_fileds[]"></textarea>
+               </div>
+              </div>
+              <div class="col-1 py-5">
+               <div class="btn btn-danger"><button wire:click="Inputdeletedg('{{ $field->label }}', '{{ $field->select_type }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+               </div>
+           </div>
+             @elseif($field->select_type == 'Check Boxes')
+            <div class="col-md-5">
+               <div class="form-group my-3">
+                 <label class="form-label d-block">{{$field->label}}</label>
+                  <input type="hidden" wire:model="input_fields_key[]" value="{{$field->label}}">
+                   <input type="hidden" wire:model="input_fields_type[]" value="{{$field->select_type}}">
+                  <input type="checkbox" class="" id="exampleFormControlInput1" placeholder="">
+               </div>
+              </div>
+              <div class="col-1 py-5">
+               <div class="btn btn-danger"><button wire:click="Inputdeletedg('{{ $field->label }}', '{{ $field->select_type }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+               </div>
+           </div>
+             @else
+              <div class="col-md-5">
+               <div class="form-group my-3">
+                  <label class="form-label " >{{$field->label}}</label>
+                    <input type="hidden" wire:model="input_fields_key[]" value="{{$field->label}}">
+                    <input type="hidden" wire:model="input_fields_type[]" value="{{$field->select_type}}">
+                    <input type="{{$field->select_type}}" class="{{$class}}" id="exampleFormControlInput1" placeholder="">
+               
+               </div>
+            </div>
+            <div class="col-1 py-5">
+               <div class="btn btn-danger"><button wire:click="Inputdeletedg('{{ $field->label }}', '{{ $field->select_type }}')" type="button" style="margin:0px !important" class="pull-left">X</button>
+               </div>
+           </div>
+           @endif
+           @endforeach
+         </div>
+     
+            
             {{-- <hr class="frmHoriz"> --}}
          
             <div class="row">
