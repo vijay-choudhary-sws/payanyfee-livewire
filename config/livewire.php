@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'class_namespace' => 'App\Http\Livewire',
+    'class_namespace' => 'App\http\Livewire',
 
     /*
     |---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ return [
     |
     */
 
-    'render_on_redirect' => true,
+    'render_on_redirect' => false,
 
     /*
     |---------------------------------------------------------------------------
@@ -114,6 +114,7 @@ return [
     */
 
     'inject_assets' => true,
+    
 
     /*
     |---------------------------------------------------------------------------
@@ -155,5 +156,5 @@ return [
     |
     */
 
-    'pagination_theme' => 'bootstrap',
+    'pagination_theme' => 'tailwind',
 ];

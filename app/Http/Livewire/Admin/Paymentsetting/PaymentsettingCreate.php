@@ -74,13 +74,14 @@ class PaymentsettingCreate extends Component
     
             $this->slug = SlugService::createSlug(Paymentsetting::class, 'slug', $this->title);
     
-           $ths = Paymentsetting::create(
+           $lastinsertid = Paymentsetting::create(
                 $this->only(['title', 'slug', 'email', 'cc_email', 'bcc_email', 'status'])
-            );
+            )->id;
 
             $this->dispatch('toastSuccess', $this->heading.' Create successfully saved.');
     
-            return $this->redirect(route('admin.paymentsettings'), navigate: true);
+            return $this->redirect(url('admin/paymentsettings/'.$lastinsertid.'/paymentsettingedit'), navigate: true);
+
         } catch (ValidationException $e) {
             $errors = $e->errors();
             $errorMessages = [];

@@ -1,0 +1,9 @@
+<div>
+   <label for="{{ $in_data->inputType->tag_name }}{{ $in_data->id }}" class="mb-2">{{ $in_data->label }}</label><a href='#' wire:click.prevent="removeInput({{ $in_data->id }})">  remove</a>
+   <select name="{{$in_data->name}}" id="{{ $in_data->inputType->tag_name }}{{ $in_data->id }}" class="form-control">
+      <option value="" selected>--select {{ $in_data->label }}--</option>
+      @foreach ($in_data->metaOption as $item)
+          <option value="{{$item->option_value}}">{{$item->label}}</option>
+      @endforeach
+   </select>
+</div>
