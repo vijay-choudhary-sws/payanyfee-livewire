@@ -13,7 +13,7 @@ use App\Http\Livewire\Admin\SelectData\{SelectData};
 use App\Http\Livewire\Admin\Gst\{Gst};
 use App\Http\Livewire\Admin\Course\{CourseList,CourseCreate,CourseEdit,CourseView};
 use App\Http\Livewire\Admin\PaymentGetWay\{PaymentGetWay};
-use App\Http\Livewire\Admin\Paymentsetting\{PaymentsettingList,PaymentsettingCreate,PaymentsettingEdit,PaymentsettingView};
+use App\Http\Livewire\Admin\Paymentsetting\{PaymentPreview, PaymentsettingList,PaymentsettingCreate,PaymentsettingEdit,PaymentsettingView};
 
 use Illuminate\Support\Facades\Auth;
 
@@ -113,6 +113,7 @@ Route::group([
         Route::get('/paymentsettingcreate',  PaymentsettingCreate::class)->name('paymentsettings.paymentsettingcreate');
         Route::get('/{paymentsettings}/paymentsettingedit',  PaymentsettingEdit::class)->name('paymentsettings.paymentsettingedit');
         Route::get('/{id}/paymentsettingview',  PaymentsettingView::class)->name('paymentsettings.paymentsettingview');
+        Route::get('/payment-preview/{payment_id}',  PaymentPreview::class)->name('paymentsettings.paymentpreview');
         // Route::get('/model-form', PaymentsettingModelView::class)->name('paymentsettings.addfield');
       });
 

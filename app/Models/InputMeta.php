@@ -27,5 +27,6 @@ class InputMeta extends Model
     {
         return $this->hasMany(MetaOption::class);
     }
+
     
 }

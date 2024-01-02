@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="container">
-        <div class="row justify-content-center mt-150 align-items-center middle_part">
+        <div class="row justify-content-center mt-150 align-items-center middle_part" style="text-align: left;">
             <div class="col-md-10">
                 <div class="card">
                     <div class="feeheading">
@@ -66,7 +66,7 @@
                                                                         <tr>
                                                                             <td class="border-0 align-middle">{{ ucwords($str_small) }}</td>
                                                                             <td class="text-end border-0 align-middle">
-                                                                                <a href="{{ url('/payment') . '/' . $payment->slug }}" class="btn btn-dark btn-sm py-1" wire:navigate.hover>Start Now</a>
+                                                                                <a href="{{ url('/payment') . '/paymentdetail/' . $payment->slug }}" class="btn btn-dark btn-sm py-1" wire:navigate.hover>Start Now</a>
                                                                             </td>
                                                                         </tr>
 

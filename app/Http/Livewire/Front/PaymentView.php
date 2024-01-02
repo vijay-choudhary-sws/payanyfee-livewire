@@ -13,6 +13,7 @@ class PaymentView extends Component
     public function render()
     {
         $payments = Paymentsetting::where('status', 1)->get();
+      
         return view('livewire.front.payment-view', compact('payments'));
     }
 }
