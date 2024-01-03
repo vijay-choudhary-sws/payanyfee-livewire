@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin\Paymentsetting;
 
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Models\{Paymentsetting, InputType, Field, InputMeta, PaymentsettingMeta, Inputselectdata, MetaOption};
+use App\Models\{Paymentsetting, InputType, Field, InputMeta, PaymentsettingMeta, Inputselectdata, MetaOption, Paymentgetways, SettingWithGetways};
 use Illuminate\Http\Request;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Validation\ValidationException;
@@ -35,7 +35,7 @@ class PaymentsettingEdit extends Component
     public $Editfields;
     public $heading = 'Paymentsetting';
     public $label;
-    public $select_type;
+    public $select_type, $getwayId = [];
     public $type_id = 1;
     public $input_data;
     public $paymentsetting_id;
@@ -52,7 +52,7 @@ class PaymentsettingEdit extends Component
     public $option = [];
     public $is_option = false;
     public $orderno = 1;
-
+    public $paymentgetways;
     protected $listeners = ['removeInput'];
 
     public function create()
@@ -71,6 +71,8 @@ class PaymentsettingEdit extends Component
     public function mount(Paymentsetting $paymentsettings)
     {
 
+        $this->paymentgetways = Paymentgetways::all();
+        // echo"<pre>";print_r($this->paymentgetways);die;
         $this->id = $paymentsettings->id;
         $this->title = $paymentsettings->title;
         $this->slug = $paymentsettings->slug;
@@ -79,6 +81,11 @@ class PaymentsettingEdit extends Component
         $this->bcc_email = $paymentsettings->bcc_email;
         $this->status = $paymentsettings->status;
         $this->Paymentsetting = $paymentsettings;
+        $getways = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
+
+        // foreach ($getways as $dy) {
+        //     array_push($this->getwayId, $dy->paymentgetway_id);
+        // }
 
         $this->inputDataBox();
     }
@@ -132,7 +139,7 @@ class PaymentsettingEdit extends Component
 
     public function render()
     {
-
+        $getways = SettingWithGetways::with('getway')->get();
         $paymentsetting_meta = PaymentsettingMeta::where('paymentsetting_id', $this->id)->get();
         $inputselectdatas = Inputselectdata::all();
         $inputtype = InputType::all();
@@ -141,9 +148,9 @@ class PaymentsettingEdit extends Component
         $class = "form-control";
 
         if (!empty($Fields)) {
-            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype'));
+            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
         } else {
-            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype'));
+            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
         }
     }
 
@@ -276,19 +283,35 @@ class PaymentsettingEdit extends Component
     public function updateInputOreder($items)
     {
         // dd($items);
-        foreach($items as $item){
-           $update = InputMeta::where('id',$item['value'])->update(['order_by'=>$item['order']]);
+        foreach ($items as $item) {
+            $update = InputMeta::where('id', $item['value'])->update(['order_by' => $item['order']]);
         }
 
 
         $this->inputDataBox();
         $this->dispatch('toastSuccess', 'Input successfully ordered.');
+    }
 
+    public function inputDataBox()
+    {
+        $this->input_data = InputMeta::wherePaymentsetting_id($this->id)->orderBy('order_by', 'ASC')->get();
+    }
+
+
+    public function SettingWithGetway()
+    {
+       
+            SettingWithGetways::create([
+                'paymentsetting_id' => $this->id,
+                'paymentgetway_id' => $this->getwayId,
+            ]);
+    }
+
+
+    public function removese($id){
+
+         SettingWithGetways::where('id',$id)->delete();
         
-
-      }
-
-     public function inputDataBox(){
-        $this->input_data = InputMeta::wherePaymentsetting_id($this->id)->orderBy('order_by','ASC')->get();
-     } 
+       
+    }
 }
