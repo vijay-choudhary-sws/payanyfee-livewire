@@ -12,7 +12,7 @@ Route::group(['prefix' => 'payment'], function () {
     Route::get('/', PaymentView::class)->name('front.payment-view');
     Route::get('/paymentdetail/{slug}', PaymentDetail::class);
     Route::get('select-payment-type/{payment_id}',PaymentType::class)->name('payment.select-payment-type');
-    Route::get('/paycheck-out/{payment_id}', PaycheckOut::class)->name('payment.paycheck-out');
+    Route::get('/paycheck-out/{payment_id}/{gateway_id}', PaycheckOut::class)->name('payment.paycheck-out');
     // Route::get('/preview/{payment_id}', PaymentPreview::class)->name('payment.preview');
     Route::get('/preview/{payment_id}', PaymentPreview::class)->name('payment.preview');
 });

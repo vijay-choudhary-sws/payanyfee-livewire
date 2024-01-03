@@ -3,8 +3,8 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
                 <div class="logo text-center">
-                    <img src="{{asset('assets/images/payanyfee_logo.png')}}" class="img-fluid"
-                        style="height:30px">
+                    <img src="{{asset('assets/images/payanyfee_logo.png')}}" class="img-fluid mx-auto"
+                       >
                 </div>
                 <span class="display-3 d-block fw-normal text-center">Welcome </span>
             </div>

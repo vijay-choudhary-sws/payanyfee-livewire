@@ -2,15 +2,19 @@
 
 namespace App\Http\Livewire\Front;
 
-use App\Models\{InputMeta,Payment,Paymentsetting,PaymentMeta,PaymentMetaMultiple};
+use App\Models\{InputMeta,Payment, Paymentgetways, Paymentsetting,PaymentMeta,PaymentMetaMultiple};
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('livewire.admin.layouts.applogin')]
 class PaymentPreview extends Component
 {
-    public $payment_id,$payments,$input_data,$paymentsetting,$multiplevalue,$formdata,$amount,$geolocation,$paymethod;
+    public $payment_id,$payments,$input_data,$paymentsetting,$multiplevalue,$formdata,$amount,$geolocation,$paymentGateways;
     public $showEditModal = false;
+
+    #[Validate('required',message: 'Please select any gateway.')] 
+    public $paymethod;
 
     public function mount($payment_id)
     {
@@ -18,7 +22,7 @@ class PaymentPreview extends Component
         $this->payment_id = base64_decode($payment_id);
         $this->payments = Payment::with('paymentMeta.paymentMetaMultiple')->find($this->payment_id);
         $this->input_data = InputMeta::where('paymentsetting_id', $this->payments->paymentsetting_id)->orderBy('order_by')->get();
-        $this->paymentsetting = Paymentsetting::find($this->payments->paymentsetting_id);
+        $this->paymentGateways = Paymentgetways::whereStatus(1)->get();
 
         foreach ($this->payments->paymentMeta  as $input) {
 
@@ -34,7 +38,7 @@ class PaymentPreview extends Component
 
         $this->amount = $this->payments->amount;
         $this->geolocation = 'IN';
-        $this->paymethod = 'paytm';
+        // $this->paymethod = 'paytm';
     }
     
     public function update()
@@ -81,6 +85,8 @@ class PaymentPreview extends Component
     }
     public function paynow()
     {
-        return $this->redirect(route('payment.paycheck-out',base64_encode($this->payment_id)), navigate: true);
+        $this->validate();
+        
+        return $this->redirect(route('payment.paycheck-out',[base64_encode($this->payment_id),base64_encode($this->paymethod)]), navigate: true);
     }
 }

@@ -90,7 +90,7 @@
                                             <td>{{ $ptc->name }} </td>
                                             <td>
                                                 
-                                                <img src="{{ asset('storage/' . $ptc->photo) }}" class="img-fluid" width="50px" height="50px">
+                                                <img src="{{ asset($ptc->photo) }}" class="img-fluid" width="50px" height="50px">
                                                
                                             </td>
                                             <td>
@@ -140,45 +140,75 @@
                    
                         <h2 class="text-2xl font-bold mb-4">{{ $pgwId ? 'Edit' : 'Create' }} {{$heading}}</h2>
                         <form  wire:submit.prevent="{{ $pgwId ? 'update' : 'store' }}">
-                            <div class="mb-4">
-                                <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
-                                <input type="text" wire:model="name" id="name" class="form-control" placeholder="Enter Name">
-                                @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label" for="status">Status</label>
-                                <select wire:model.defer="status" id="status" class="form-control">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="name" class="block text-gray-700 font-bold mb-2">Name</label>
+                                    <input type="text" wire:model="name" id="name" class="form-control" placeholder="Enter Name">
+                                    @error('name') <span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label class="form-label">Select Payment Country<sup class="text-danger">*</sup></label>
+                                    <select wire:model="selectpaymentcountry" class="form-control">
                                     <option value="">Select</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">In-Active</option>
+                                    <option value="0">both</option>
+                                    <option value="1">India</option>
+                                    <option value="2">Out Side India</option>
                                 </select>
-                                @error('status')<span class="text-danger"
-                                    role="alert">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="mb-4">
-                                <label class="form-label">Select Payment Country<sup class="text-danger">*</sup></label>
-                                <select wire:model="selectpaymentcountry" class="form-control">
-                                 <option value="">Select</option>
-                                <option value="0">both</option>
-                                <option value="1">India</option>
-                                <option value="2">Out Side India</option>
-                             </select>
-                                @error('selectpaymentcountry') <span class="text-danger">{{ $message }}</span>@enderror
-                            </div>
-                            <div class="mb-4">
-                                <label for="logo" class="block text-gray-700 font-bold mb-2">Logo</label>
+                                    @error('selectpaymentcountry') <span class="text-danger">{{ $message }}</span>@enderror
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <label class="form-label" for="status">Status</label>
+                                    <select wire:model.defer="status" id="status" class="form-control">
+                                        <option value="">Select</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">In-Active</option>
+                                    </select>
+                                    @error('status')<span class="text-danger"
+                                        role="alert">{{ $message }}</span>@enderror
+                                </div>
                                 
-                                @if ($photo && is_string($photo))
-                                    <img src="{{ asset('storage/' . $photo) }}" class="img-fluid" width="50px" height="50px">
-                                @elseif ($photo && is_object($photo))
-                                    <img src="{{ $photo->temporaryUrl() }}" class="img-fluid" width="50px" height="50px">
-                                @else
-                                    <p>No image available</p>
-                                @endif
-                                <input type="file" wire:model="photo" id="photo" class="form-control">
-                                @error('photo') <span class="text-danger">{{ $message }}</span>@enderror
+                                <div class="col-md-8 mb-4">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <label for="logo" class="block text-gray-700 font-bold mb-2">Logo</label>
+                                            <input type="file" wire:model="photo" id="photo" class="form-control">
+                                            @error('photo') <span class="text-danger">{{ $message }}</span>@enderror
+                                        </div>
+                                        <div class="col-4 align-self-center">
+                                            @if ($photo && is_string($photo))
+                                                <img src="{{ asset($photo) }}" class="img-fluid" width="50px" height="50px">
+                                            @elseif ($photo && is_object($photo))
+                                                <img src="{{ $photo->temporaryUrl() }}" class="img-fluid" width="50px" height="50px">
+                                            @else
+                                                <p>No image available</p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <h3 class="fw-bold">Payment Mode</h3>
+                                    <table class="table-sm w-100 table-striped border">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-center">Name</th>
+                                                <th scope="col" class="text-center">Amount</th>
+                                                <th scope="col" class="text-center">Is Percent</th>
+                                                <th scope="col" class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($paymentMode as $mode)
+                                                <tr>
+                                                    <td scope="row" class="text-center">{{$mode->name}}</td>
+                                                    <td class="text-center"><input type="number" wire:model="amount.{{$mode->id}}" class="form-control-sm"></td>
+                                                    <td class="text-center"><input type="checkbox" wire:model="percent.{{$mode->id}}" class="form-check-input"></td>
+                                                    <td class="text-center"><input type="checkbox" wire:model="modestatus.{{$mode->id}}" class="form-check-input"></td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            
                             
                             <div class="flex justify-end">
  

@@ -4,19 +4,18 @@ namespace App\Http\Livewire\Admin\PaymentGetWay;
 use Livewire\Attributes\Rule;
 use Livewire\Attributes\Validate; 
 use Livewire\Component;
-use App\Models\Paymentgetways;
+use App\Models\{GatewayMeta, Paymentgetways,PaymentMode};
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
-use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Illuminate\Validation\ValidationException;
 
 class PaymentGetWay extends Component
 {
     use WithPagination;
-     use WithFileUploads;
-     use Exportable;
+    use WithFileUploads;
+    use Exportable;
      
     public $heading = 'Payment GetWay';
     public $searchTerm;
@@ -39,12 +38,19 @@ class PaymentGetWay extends Component
     public $isOpen = 0;
     public $isedit = 0;
     public $pgwId;
+    public $search;
     public $selectedtitle;
     public $filterApplied = false;
     public $clearfilter = "";
+    public $paymentMode;
+    public $amount= [],$percent= [],$modestatus = [];
+
+
     public function mount()
     {
-        $this->Payments= Paymentgetways::all();
+        $this->Payments = Paymentgetways::all();
+        $this->paymentMode = PaymentMode::all();
+
     }
     public function applyFilter()
     {
@@ -90,8 +96,8 @@ class PaymentGetWay extends Component
       
 
     public function store()
-    {         
-    
+    {   
+      
         try {
         $this->validate([
             'name' => 'required',
@@ -101,14 +107,39 @@ class PaymentGetWay extends Component
         ]);
 
 
+
         $photoPath = $this->photo->store('photo','public');
-        Paymentgetways::create([
+        
+        $gateway_id = Paymentgetways::create([
             'name' => $this->name,
             'selectpaymentcountry' => $this->selectpaymentcountry,
             'photo' => $photoPath,
             'status' => $this->status,
-        ]);
+        ])->id;
  
+        foreach($this->paymentMode as $mode){
+            $amount = $percent = $modestatus = 0;
+
+            if(array_key_exists($mode->id,$this->amount)){
+                $amount = $this->amount[$mode->id];
+            };
+            
+            if(array_key_exists($mode->id,$this->percent)){
+                $percent = $this->percent[$mode->id];
+            };
+
+            if(array_key_exists($mode->id,$this->modestatus)){
+                $modestatus = $this->modestatus[$mode->id];
+            };
+
+            GatewayMeta::create([
+                'getway_id' => $gateway_id,
+                'payment_mode_id' => $mode->id,
+                'amount' => $amount,
+                'is_percent' => $percent,
+                'status' => $modestatus,
+            ]);
+        }
 
         $this->dispatch('toastSuccess',$this->heading.' create successfully .');
         $this->closeModal();
@@ -224,14 +255,14 @@ class PaymentGetWay extends Component
         if ($course->status == 0) {
             $course->status = 1;
             $course->save();
-            $this->dispatch('toastSuccess','status successfully deleted.');
+            $this->dispatch('toastSuccess','status activated successfully.');
         } else {
             $course->status = 0;
             $course->save();
-            session()->flash('success', 'status deactivated successfully.');
+            $this->dispatch('toastSuccess','status deactivated successfully.');
         }
     
-        return redirect()->route('admin.paymentgetways');
+        // return redirect()->route('admin.paymentgetways');
     }
 
     

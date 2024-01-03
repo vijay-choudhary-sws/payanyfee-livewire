@@ -7,7 +7,7 @@ use Livewire\Component;
 
 class PaymentPreview extends Component
 {
-    public $payment_id,$payments,$input_data;
+    public $payment_id,$payments,$input_data,$heading = 'Payment Preview';
 
     public function mount($payment_id)
     {

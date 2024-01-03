@@ -5,13 +5,15 @@ namespace App\Http\Livewire\Front;
 
 use App\Models\{PaymentsettingMeta, Payment, Paymentsetting, Category, InputMeta, PaymentMeta, PaymentMetaMultiple};
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate; 
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 
 #[Layout('livewire.admin.layouts.applogin')]
 class PaymentDetail extends Component
 {
-    public $paymentMetas, $paymentsetting, $geolocation, $Categories, $paymentType, $input_data, $FormInput, $front = true, $formdata, $amount;
+    public $paymentMetas, $paymentsetting, $geolocation, $Categories, $paymentType, $input_data, $FormInput, $front = true, $formdata, $amount, $name, $email, $phone;
     protected $listeners = ['store'];
 
     public function mount($slug)
@@ -48,37 +50,62 @@ class PaymentDetail extends Component
 
     public function store()
     {
-        $formdatas = $this->formdata;
-        $payment_id = Payment::create([
-            'paymentsetting_id' => $this->paymentsetting->id,
-            'amount' => $this->amount,
-        ])->id;
+        try {
+            $formdatas = $this->formdata;
+            $this->validate([
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required|numeric',
+                'amount' => 'required',
+            ]);
 
-        foreach ($formdatas as $key => $formdata) {
-            if (is_array($formdata)) {
-                $payment_meta_id = PaymentMeta::create([
-                    'paymentsetting_id' => $this->paymentsetting->id,
-                    'meta_name' => $key,
-                    'meta_value' => '',
-                    'payment_id' => $payment_id,
-                ])->id;
-                foreach ($formdata as $value) {
-                    PaymentMetaMultiple::create([
+            $payment_id = Payment::create([
+                'paymentsetting_id' => $this->paymentsetting->id,
+                'name' => $this->name,
+                'email' => $this->email,
+                'phone' => $this->phone,
+                'amount' => $this->amount,
+            ])->id;
+
+            foreach ($formdatas as $key => $formdata) {
+                if (is_array($formdata)) {
+                    $payment_meta_id = PaymentMeta::create([
+                        'paymentsetting_id' => $this->paymentsetting->id,
                         'meta_name' => $key,
-                        'meta_value' => $value,
-                        'payment_meta_id' => $payment_meta_id,
+                        'meta_value' => '',
+                        'payment_id' => $payment_id,
+                    ])->id;
+                    foreach ($formdata as $value) {
+                        PaymentMetaMultiple::create([
+                            'meta_name' => $key,
+                            'meta_value' => $value,
+                            'payment_meta_id' => $payment_meta_id,
+                        ]);
+                    }
+                } else {
+                    PaymentMeta::create([
+                        'paymentsetting_id' => $this->paymentsetting->id,
+                        'meta_name' => $key,
+                        'meta_value' => $formdata,
+                        'payment_id' => $payment_id,
                     ]);
                 }
-            } else {
-                PaymentMeta::create([
-                    'paymentsetting_id' => $this->paymentsetting->id,
-                    'meta_name' => $key,
-                    'meta_value' => $formdata,
-                    'payment_id' => $payment_id,
-                ]);
             }
-        }
 
-        return $this->redirect(route('payment.preview',base64_encode($payment_id)), navigate: true);
-    }   
+            return $this->redirect(route('payment.preview', base64_encode($payment_id)), navigate: true);
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+            $errorMessages = [];
+
+            foreach ($errors as $field => $messages) {
+                $errorMessages[] = $field . ': ' . implode(', ', $messages);
+            }
+
+            $errorMessage = implode('<br>', $errorMessages);
+
+            $this->dispatch('toastError', $errorMessage);
+        } catch (\Exception $e) {
+            $this->dispatch('toastError', 'An error occurred while processing your request.');
+        }
+    }
 }

@@ -3,6 +3,25 @@
         <div class="page-content">
             <div class="card">
                 <div class="card-body">
+                    <div class="ms-auto ">
+                        <div class="row">
+                            <div class='col-3 mt-2' style="font-size:20px">
+                                <h5 class="mb-0">{{ $heading }}</h5>
+                            </div>
+                            <div class="ms-auto text-end col-3">
+                                <div class="btn-group AddbtnPadding">
+                                    <a wire:navigate href="{{ route('admin.paymentsettings.paymentList',0) }}"
+                                        class="btn btn-primary mt-2 mt-lg-0 mb-">
+                                        Back
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -12,8 +31,24 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Name</td>
+                                <td>{{$payments->name}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Email</td>
+                                <td>{{$payments->email}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>phone</td>
+                                <td>{{$payments->phone}}</td>
+                            </tr>
+
                             @php
-                            $i = 1;
+                            $i = 4;
                             @endphp
                             @foreach ($input_data as $d)
                             @foreach ($payments->paymentMeta as $item)
