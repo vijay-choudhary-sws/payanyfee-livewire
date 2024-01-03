@@ -8,18 +8,12 @@
                             <div class='col-6 mt-2' style="font-size:20px">
                                 <h5 class="mb-0">Edit {{ $heading }}</h5>
                             </div>
-                            <div class="ms-auto text-end col-3">
-                                <div class="btn-group AddbtnPadding">
-                                    <button wire:click="create" class="btn btn-primary mt-2 mt-lg-0 mb-">
-                                        Add Field
-                                    </button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        @if ($showEditModal)
+            @if ($showEditModal)
             <div class="modal-body">
                 <div class="fixed inset-0 flex items-center justify-center z-50">
                     <div class="absolute inset-0 bg-black opacity-50"></div>
@@ -148,101 +142,143 @@
                     </div>
                 </div>
             </div>
-         @endif
+            @endif
+            <div class="row">
+                <div class="col-4">
 
-            <div class="card-body">
-                <form wire:submit="update()">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
+                    <div class="card-body">
+                        <form wire:submit="update()">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
 
-                                <label for="exampleFormControlInput1">Title</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="Enter Title" wire:model="title">
-                                @error('title')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                                        <label for="exampleFormControlInput1">Title</label>
+                                        <input type="text" class="form-control" id="exampleFormControlInput1"
+                                            placeholder="Enter Title" wire:model="title">
+                                        @error('title')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
 
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="frmInputGroup">
+                                        {{-- <div class="bootstrap-tagsinput"> --}}
+                                            <label for="form-label">Email</label>
+                                            <input type="email" class="form-control" id="exampleFormControlInput1"
+                                                placeholder="Enter Email" wire:model="email">
+                                            @error('email')
+                                            <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                            {{--
+                                        </div> --}}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="frmInputGroup">
-                                {{-- <div class="bootstrap-tagsinput"> --}}
-                                    <label for="form-label">Email</label>
-                                    <input type="email" class="form-control" id="exampleFormControlInput1"
-                                        placeholder="Enter Email" wire:model="email">
-                                    @error('email')
-                                    <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                    {{--
-                                </div> --}}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group my-3">
+                                        <label for="exampleFormControlInput1">CC Email</label>
+                                        <input type="email" class="form-control" id="exampleFormControlInput1"
+                                            placeholder="Enter CC Email" wire:model="cc_email">
+                                        @error('cc_email')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group  my-3 mb-3">
+                                        <label for="exampleFormControlInput1">BCC Email</label>
+                                        <input type="email" class="form-control" id="exampleFormControlInput1"
+                                            placeholder="Enter BCC Email" wire:model="bcc_email">
+                                        @error('bcc_email')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label" for="status">Status</label>
+                                        <select wire:model="status" id="status" class="form-control">
+                                            <option value="">Select</option>
+                                            <option value="1">Active</option>
+                                            <option value="0">In-Active</option>
+                                        </select>
+                                        @error('status')
+                                        <span class="text-danger" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="my-4">
+
+                                        <button class="btn  bg-red-500 text-white" type="submit">Update
+                                            <span class="spinner-border spinner-border-sm" wire:loading
+                                                wire:target="save" role="status" aria-hidden="true"></span>
+                                        </button>
+                                        <a href="{{ route('admin.paymentsettings') }}" wire:navigate
+                                            class="btn btn-secondary">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group my-3">
-                                <label for="exampleFormControlInput1">CC Email</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="Enter CC Email" wire:model="cc_email">
-                                @error('cc_email')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                </div>
+
+                <div class="col-8">
+                    <div class="card-body">
+                        <div class="ms-auto text-end col-3">
+                            <div class="btn-group AddbtnPadding">
+                                <button wire:click="create" class="btn btn-primary mt-2 mt-lg-0 mb-">
+                                    Add Field
+                                </button>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group  my-3 mb-3">
-                                <label for="exampleFormControlInput1">BCC Email</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="Enter BCC Email" wire:model="bcc_email">
-                                @error('bcc_email')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group mb-3">
-                                <label class="form-label" for="status">Status</label>
-                                <select wire:model="status" id="status" class="form-control">
-                                    <option value="">Select</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">In-Active</option>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <label class="form-label" for="status">Payment Get Way</label>
+                                <select id="status" class="form-control" wire:model="getwayId">
+                                    <option value="">Select Payment Getway</option>
+                                    @foreach($paymentgetways as $label)
+                                    <option value="{{ $label->id}}">{{ $label->name }}</option>
+                                    @endforeach
                                 </select>
-                                @error('status')
+                                @error('paymentgetways')
                                 <span class="text-danger" role="alert">{{ $message }}</span>
                                 @enderror
+
                             </div>
-                        </div>
-                    </div>
-
-                    <hr class="hr">
-
-                    <div class="row" wire:sortable="updateInputOreder">
-
-                        @foreach ($input_data as $d)
-                        <div class="col-md-12" wire:sortable.item="{{ $d->id }}" wire:key="order-{{ $d->id }}">
-                            <livewire:is :component="'common.' . $d->inputType->tag_name" livewire:common. :in_data="$d"
-                                :wire:key="$d->id" wire:sortable.handle />
-                        </div>
-
-                        @endforeach
-
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="my-4">
-
-                                <button class="btn  bg-red-500 text-white" type="submit">Update
-                                    <span class="spinner-border spinner-border-sm" wire:loading wire:target="save"
-                                        role="status" aria-hidden="true"></span>
-                                </button>
-                                <a href="{{ route('admin.paymentsettings') }}" wire:navigate
-                                    class="btn btn-secondary">Cancel</a>
+                            <div class="col-6 py-4">
+                                <button class="btn btn-primary" wire:click="SettingWithGetway">save</button>
                             </div>
+
+                        </div>
+                        <div class="col-md-12">
+
+                            <ul>
+                                @foreach($getways as $settingWithGetway)
+                                <li>{{ $settingWithGetway->getway->name }}  <a class="text-danger" wire:click="removese({{$settingWithGetway->id}})" href="#">remove</a></li>
+                                @endforeach
+                            </ul>
+
+                        </div>
+                        <div class="row" wire:sortable="updateInputOreder">
+
+                            @foreach ($input_data as $d)
+                            <div class="col-md-12" wire:sortable.item="{{ $d->id }}" wire:key="order-{{ $d->id }}">
+                                <livewire:is :component="'common.' . $d->inputType->tag_name" livewire:common.
+                                    :in_data="$d" :wire:key="$d->id" wire:sortable.handle />
+                            </div>
+
+                            @endforeach
+
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
