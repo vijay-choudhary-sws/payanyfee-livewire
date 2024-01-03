@@ -93,6 +93,20 @@ class PaymentsettingList extends Component
 
     }
 
+
+     // public function delete(Paymentsetting $Paymentsetting)
+    // {
+    //     // Delete related PaymentsettingMeta data
+    //     if ($Paymentsetting->paymentsettingMeta) {
+    //         $Paymentsetting->paymentsettingMeta->delete();
+    //     }
+    
+    //     // Delete the Paymentsetting
+    //     $Paymentsetting->delete();
+    
+    //     $this->dispatch('toastSuccess', $this->heading.' successfully deleted.');
+    // }
+    
     public function status_update($paymentSettingId)
     {
         $Payments = Paymentsetting::find($paymentSettingId);
