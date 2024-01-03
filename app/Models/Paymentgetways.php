@@ -10,4 +10,8 @@ class Paymentgetways extends Model
     protected $fillable = [
         'name','selectpaymentcountry','photo','status'
     ];
+
+    public function gatewayMeta(){
+        return $this->hasMany(GatewayMeta::class,'getway_id');
+    }
 }
