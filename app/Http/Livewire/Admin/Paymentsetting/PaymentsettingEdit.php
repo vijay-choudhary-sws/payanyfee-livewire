@@ -33,7 +33,7 @@ class PaymentsettingEdit extends Component
     public $Paymentsetting;
     public $showEditModal = false;
     public $Editfields;
-    public $heading = 'Paymentsetting';
+    public $heading = 'Payment Setting';
     public $label;
     public $select_type, $getwayId;
     public $type_id = 1;
@@ -56,8 +56,9 @@ class PaymentsettingEdit extends Component
     public $is_custom = false;
     public $orderno = 1;
     public $paymentgetways;
+    public $showSaveButton = false;
     protected $listeners = ['removeInput'];
-
+   
     public function create()
     {
         $field = InputType::all();
@@ -74,7 +75,7 @@ class PaymentsettingEdit extends Component
     public function mount(Paymentsetting $paymentsettings)
     {
 
-        $this->paymentgetways = Paymentgetways::all();
+        $this->paymentgetways = Paymentgetways::get();
         // echo"<pre>";print_r($this->paymentgetways);die;
         $this->id = $paymentsettings->id;
         $this->title = $paymentsettings->title;
@@ -84,7 +85,7 @@ class PaymentsettingEdit extends Component
         $this->bcc_email = $paymentsettings->bcc_email;
         $this->status = $paymentsettings->status;
         $this->Paymentsetting = $paymentsettings;
-        $getways = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
+        $getwayId  = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
 
 
         $this->inputDataBox();
@@ -300,17 +301,24 @@ class PaymentsettingEdit extends Component
 
     public function SettingWithGetway()
     {
+       
+            SettingWithGetways::firstOrCreate([
+                'paymentsetting_id' => $this->id,
+                'paymentgetway_id' => $this->getwayId,
+            ]);
+           
 
-        SettingWithGetways::create([
-            'paymentsetting_id' => $this->id,
-            'paymentgetway_id' => $this->getwayId,
-        ]);
     }
+        public function buttondisbeld(){
+        $this->showSaveButton = true;
+        }
 
 
-    public function removese($id)
-    {
+    public function removese($id){
+        
 
-        SettingWithGetways::where('id', $id)->delete();
+         SettingWithGetways::where('id',$id)->delete();
+         $this->dispatch('toastSuccess', 'settingwithgetway remove successfully');
+       
     }
 }
