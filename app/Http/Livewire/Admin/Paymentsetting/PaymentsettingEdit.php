@@ -139,7 +139,7 @@ class PaymentsettingEdit extends Component
 
     public function render()
     {
-        $getways = SettingWithGetways::with('getway')->get();
+        $getways = SettingWithGetways::with('getway')->where('paymentsetting_id', $this->id)->get();
         $paymentsetting_meta = PaymentsettingMeta::where('paymentsetting_id', $this->id)->get();
         $inputselectdatas = Inputselectdata::all();
         $inputtype = InputType::all();

@@ -110,8 +110,7 @@
                                             <td>
                                                 <button style="font-size: 12px;"
                                                     wire:click="status_update({{ $ptc->id }})"
-                                                    class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold "
-                                                    onclick="return confirm('Are you sure you want to change this course status?');">
+                                                    class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold ">
                                                     @if ($ptc->status == 1)
                                                         Inactive
                                                     @else
@@ -119,9 +118,8 @@
                                                     @endif
                                                 </button>
                                             </td>
-                                            <td><button style="font-size: 8px;padding-left: 5px; padding-right: 0px;"
-                                                    class="btn btn-secondary" wire:click="payedit({{ $ptc->id }})"
-                                                    title="Edit {{ $heading }}"><i class="bx bx-edit"></i></button>
+                                            <td><button style="font-size: 12px;" class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold " wire:click="payedit({{ $ptc->id }})"
+                                                    title="Edit {{ $heading }}">Update Payment Mode</button>
                                             </td>
                                             <td>
                                                 <button style="font-size: 8px;padding-left: 5px; padding-right: 0px;"
@@ -130,12 +128,12 @@
                                                         class="bx bx-edit"></i></button>
 
 
-                                                <button style="font-size: 8px;padding-left: 5px; padding-right: 0px;"
+                                                {{-- <button style="font-size: 8px;padding-left: 5px; padding-right: 0px;"
                                                     class="btn  bg-red-500 text-white" type="button"
                                                     wire:click="delete({{ $ptc->id }})"
                                                     wire:confirm="Are you sure you want to delete this {{ $heading }}?">
                                                     <i class="bx bx-trash"></i>
-                                                </button>
+                                                </button> --}}
                                             </td>
                                         </tr>
                                     @endforeach

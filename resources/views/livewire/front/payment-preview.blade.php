@@ -78,38 +78,45 @@
                                 </table>
                             </div>
                             <div class="col-md-5">
-                                @if (count($paymentGateways) > 0    )
-                                <form class="form-signin form" id="paymethod" wire:submit="paynow" method="post">
-                                    {{ csrf_field() }}
+                                @if (count($paygetway) > 0)
+                                    <form class="form-signin form" id="paymethod" wire:submit="paynow" method="post">
+                                        {{ csrf_field() }}
 
-                                    @foreach ($paymentGateways as $paymentGateway)
-                                        <div class="row pl-4">
-                                            <div class="col-md-6 align-self-center">
-                                                <input type="radio" wire:model="paymethod" id="paymethod-{{$paymentGateway->id}}"
-                                                    value="{{$paymentGateway->id}}" class="form-control-check" >
-                                                <label for="paymethod-{{$paymentGateway->id}}" class="form-check-label">{{$paymentGateway->name}}</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="paymethod-{{$paymentGateway->id}}">
-                                                    <img src="{{ asset($paymentGateway->photo) }}"
-                                                        height="50" alt="cvv" class="img">
-                                                </label>
+                                        @foreach ($paygetway as $paymentGateway)
+                                            @if ($paymentGateway->getway->status == 1)
+                                                <div class="row pl-4">
+                                                    <div class="col-md-6 align-self-center">
+                                                        <input type="radio" wire:model="paymethod"
+                                                            id="paymethod-{{ $paymentGateway->getway->id }}"
+                                                            value="{{ $paymentGateway->getway->id }}"
+                                                            class="form-control-check">
+                                                        <label for="paymethod-{{ $paymentGateway->getway->id }}"
+                                                            class="form-check-label">{{ $paymentGateway->getway->name }}</label>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="paymethod-{{ $paymentGateway->getway->id }}">
+                                                            <img src="{{ asset($paymentGateway->getway->photo) }}"
+                                                                height="50" alt="cvv" class="img">
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                        @error('paymethod')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        <div class="row mt-5">
+                                            <div class="col-md-4">
+
+                                                <button type="submit"
+                                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
+                                                    Pay Now
+                                                    <i wire:loading wire:target="submitForm"
+                                                        class="st_loader spinner-border spinner-border-sm"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                    @endforeach
-                                    @error('paymethod') <span class="text-danger">{{ $message }}</span>@enderror
-                                    <div class="row mt-5">
-                                        <div class="col-md-4">
-                                            
-                                            <button type="submit"
-                                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">
-                                                Pay Now
-                                                <i wire:loading wire:target="submitForm"
-                                                    class="st_loader spinner-border spinner-border-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                                    </form>
                                 @else
                                     Payment Gateways are not activated.<br>
                                     Please talk to administrator.
@@ -178,10 +185,9 @@
                                                                                     </span>
                                                                                 </div>
                                                                                 <input type="number"
-                                                                                    class="form-control"
-                                                                                    id="amount" wire:model="amount"
-                                                                                    value="0" required
-                                                                                    autocomplete="off">
+                                                                                    class="form-control" id="amount"
+                                                                                    wire:model="amount" value="0"
+                                                                                    required autocomplete="off">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -189,8 +195,7 @@
                                                                         <div class="flex justify-end">
                                                                             <button wire:click="update" type="submit"
                                                                                 class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Update
-                                                                                <i wire:loading
-                                                                                    wire:target="submitForm"
+                                                                                <i wire:loading wire:target="submitForm"
                                                                                     class="st_loader spinner-border spinner-border-sm"></i></button>
                                                                             <button type="button"
                                                                                 class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
