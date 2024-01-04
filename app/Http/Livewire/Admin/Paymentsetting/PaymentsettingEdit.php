@@ -35,16 +35,16 @@ class PaymentsettingEdit extends Component
     public $Editfields;
     public $heading = 'Payment Setting';
     public $label;
-    public $select_type, $getwayId;
+    public $select_type, $getwayId = '';
     public $type_id = 1;
     public $input_data;
-    public $paymentsetting_id;
+    public $paymentsetting_id, $input_select_data, $selectdata;
     public $input_tag;
     public $input_type;
     public $input_name;
     public $placeholder = '';
     public $is_required = '0';
-    public $selectType = '0';
+    public $selectType = '1';
     public $slug_name;
     public $optionvalue = [];
     public $optionlabel = [];
@@ -58,7 +58,7 @@ class PaymentsettingEdit extends Component
     public $paymentgetways;
     public $showSaveButton = false;
     protected $listeners = ['removeInput'];
-   
+
     public function create()
     {
         $field = InputType::all();
@@ -86,23 +86,17 @@ class PaymentsettingEdit extends Component
         $this->status = $paymentsettings->status;
         $this->Paymentsetting = $paymentsettings;
         $getwayId  = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
+        $this->input_select_data = Inputselectdata::all();
 
-
+        $this->selectdata = '';
         $this->inputDataBox();
     }
 
     public function isOption()
     {
-        $input_type = InputType::find($this->input_type);
-
-        $this->is_select = $input_type->type == 'select' ? true : false;
-        $this->is_option = $input_type->is_option == '1' || $input_type->type == 'select' ? true : false;
-
-        $this->i = 2;
-        $this->option = [1];
-        $this->optionvalue = [];
-        $this->optionlabel = [];
+       
     }
+    
 
     public function isCustom()
     {
@@ -301,24 +295,26 @@ class PaymentsettingEdit extends Component
 
     public function SettingWithGetway()
     {
-       
-            SettingWithGetways::firstOrCreate([
-                'paymentsetting_id' => $this->id,
-                'paymentgetway_id' => $this->getwayId,
-            ]);
-           
 
+        SettingWithGetways::firstOrCreate([
+            'paymentsetting_id' => $this->id,
+            'paymentgetway_id' => $this->getwayId,
+        ]);
+
+        $this->showSaveButton = false;
     }
-        public function buttondisbeld(){
+
+    public function buttondisbeld()
+    {
         $this->showSaveButton = true;
-        }
+    }
 
 
-    public function removese($id){
-        
+    public function removese($id)
+    {
 
-         SettingWithGetways::where('id',$id)->delete();
-         $this->dispatch('toastSuccess', 'settingwithgetway remove successfully');
-       
+
+        SettingWithGetways::where('id', $id)->delete();
+        $this->dispatch('toastSuccess', 'settingwithgetway remove successfully');
     }
 }
