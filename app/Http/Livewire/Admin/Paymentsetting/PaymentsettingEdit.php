@@ -35,7 +35,7 @@ class PaymentsettingEdit extends Component
     public $Editfields;
     public $heading = 'Paymentsetting';
     public $label;
-    public $select_type, $getwayId = [];
+    public $select_type, $getwayId;
     public $type_id = 1;
     public $input_data;
     public $paymentsetting_id;
@@ -44,6 +44,7 @@ class PaymentsettingEdit extends Component
     public $input_name;
     public $placeholder = '';
     public $is_required = '0';
+    public $selectType = '0';
     public $slug_name;
     public $optionvalue = [];
     public $optionlabel = [];
@@ -51,6 +52,8 @@ class PaymentsettingEdit extends Component
     public $i = 1;
     public $option = [];
     public $is_option = false;
+    public $is_select = false;
+    public $is_custom = false;
     public $orderno = 1;
     public $paymentgetways;
     protected $listeners = ['removeInput'];
@@ -83,26 +86,37 @@ class PaymentsettingEdit extends Component
         $this->Paymentsetting = $paymentsettings;
         $getways = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
 
-        // foreach ($getways as $dy) {
-        //     array_push($this->getwayId, $dy->paymentgetway_id);
-        // }
 
         $this->inputDataBox();
     }
 
     public function isOption()
     {
+        $input_type = InputType::find($this->input_type);
 
-        if (InputType::whereId($this->input_type)->first()->is_option == '1') {
-            $this->is_option = true;
-        } else {
-            $this->is_option = false;
-        }
+        $this->is_select = $input_type->type == 'select' ? true : false;
+        $this->is_option = $input_type->is_option == '1' || $input_type->type == 'select' ? true : false;
 
-        $this->i = 1;
-        $this->option = [];
+        $this->i = 2;
+        $this->option = [1];
         $this->optionvalue = [];
         $this->optionlabel = [];
+    }
+
+    public function isCustom()
+    {
+        if ($this->selectType == 1) {
+            $this->is_custom = false;
+            $this->is_option = true;
+
+            $this->i = 2;
+            $this->option = [1];
+            $this->optionvalue = [];
+            $this->optionlabel = [];
+        } else {
+            $this->is_custom = true;
+            $this->is_option = false;
+        }
     }
 
     public function update()
@@ -147,19 +161,15 @@ class PaymentsettingEdit extends Component
         $Fields = Field::all();
         $class = "form-control";
 
-        if (!empty($Fields)) {
-            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
-        } else {
-            return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
-        }
+
+        return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
     }
 
     public function Inputdelete()
     {
-        // Assuming you want to delete a record based on the label and select type
+
         $fieldToDelete = PaymentsettingMeta::where('paymentsetting_id', $this->id)
             ->first();
-
 
         if ($fieldToDelete) {
             $fieldToDelete->delete();
@@ -174,7 +184,7 @@ class PaymentsettingEdit extends Component
 
         try {
             if ($this->optionvalue) {
-                $validatedData = $this->validate([
+                $this->validate([
                     'label' => 'required',
                     'input_type' => 'required',
                     'input_name' => 'required',
@@ -183,7 +193,7 @@ class PaymentsettingEdit extends Component
                 ]);
             } else {
 
-                $validatedData = $this->validate([
+                $this->validate([
                     'label' => 'required',
                     'input_type' => 'required',
                     'input_name' => 'required',
@@ -201,25 +211,15 @@ class PaymentsettingEdit extends Component
             ])->id;
 
             foreach ($this->optionvalue as $key => $val) {
-                if ($key == $this->optionradio) {
-                    MetaOption::create([
-                        'option_value' => $val,
-                        'input_meta_id' => $lastInputMetaid,
-                        'label' => $this->optionlabel[$key],
-                        'is_default' => 1,
-                    ]);
-                } else {
-                    MetaOption::create([
-                        'option_value' => $val,
-                        'input_meta_id' => $lastInputMetaid,
-                        'label' => $this->optionlabel[$key],
-                        'is_default' => 0,
-                    ]);
-                }
+                MetaOption::create([
+                    'option_value' => $val,
+                    'input_meta_id' => $lastInputMetaid,
+                    'label' => $this->optionlabel[$key],
+                    'is_default' => $key == $this->optionradio ? 1 : 0,
+                ]);
             }
 
             $this->dispatch('toastSuccess', $this->heading . ' create successfully .');
-
             $this->close();
             $this->reset('label', 'select_type', 'paymentsetting_id', 'input_type', 'input_name', 'placeholder', 'is_required');
 
@@ -300,18 +300,17 @@ class PaymentsettingEdit extends Component
 
     public function SettingWithGetway()
     {
-       
-            SettingWithGetways::create([
-                'paymentsetting_id' => $this->id,
-                'paymentgetway_id' => $this->getwayId,
-            ]);
+
+        SettingWithGetways::create([
+            'paymentsetting_id' => $this->id,
+            'paymentgetway_id' => $this->getwayId,
+        ]);
     }
 
 
-    public function removese($id){
+    public function removese($id)
+    {
 
-         SettingWithGetways::where('id',$id)->delete();
-        
-       
+        SettingWithGetways::where('id', $id)->delete();
     }
 }

@@ -38,6 +38,9 @@ class PaycheckOut extends Component
             }
             $this->totalamount[$mode->id] = $totalamount;
         }
+
+        $this->paymode = $this->paymentMode[0]->id;
+       
    
     }
 
@@ -55,12 +58,14 @@ class PaycheckOut extends Component
     {
         $this->validate();
 
+        $paymentMode = GatewayMeta::find($this->paymode);
+
         Payment::whereId($this->paymentId)->update([
-            'paymentmode_id' => $this->paymode,
+            'paymentmode_id' => $paymentMode->payment_mode_id,
             'charges'=> $this->charges[$this->paymode],
             'total_amount'=>$this->totalamount[$this->paymode],
         ]);
         
-        return $this->redirect(route('payment.preview', base64_encode($this->paymentId)), navigate: true);
+        return $this->redirect(route('payment.getway-payment', base64_encode($this->paymentId)), navigate: true);
     }
 }

@@ -31,6 +31,26 @@
                                 </div>
 
                                 <div class="col-6 mb-1">
+                                    <label for="input_name" class="block text-gray-700 font-bold mb-2">Input
+                                        Name</label>
+                                    <input type="text" wire:model="input_name" id="input_name" class="form-control"
+                                        placeholder="Enter Name">
+                                    @error('input_name')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-6">
+                                    <label for="placeholder"
+                                        class="block text-gray-700 font-bold mb-2">Placeholder</label>
+                                    <input type="text" wire:model="placeholder" id="placeholder" class="form-control"
+                                        placeholder="Enter Name">
+                                    @error('placeholder')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="col-6 mb-1">
                                     <label for="input_type" class="block text-gray-700 font-bold mb-2">Input
                                         Type</label>
                                     <select class="form-control single-select" id="input_type" wire:model="input_type"
@@ -44,26 +64,7 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                <div class="col-6 mb-1">
-                                    <label for="input_name" class="block text-gray-700 font-bold mb-2">Input
-                                        Name</label>
-                                    <input type="text" wire:model="input_name" id="input_name" class="form-control"
-                                        placeholder="Enter Name">
-                                    @error('input_name')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
-
-                                <div class="col-6">
-                                    <label for="placeholder"
-                                        class="block text-gray-700 font-bold mb-2">Placeholder</label>
-                                    <input type="text" wire:model="placeholder" id="placeholder" class="form-control"
-                                        placeholder="Enter Name">
-                                    @error('placeholder')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
                                 <div class="col-6 mb-4">
                                     <label for="is_required" class="block text-gray-700 font-bold mb-2">Required</label>
                                     <select class="form-control single-select" id="is_required"
@@ -75,6 +76,34 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                @if ($is_select)
+                                    <div class="col-6 mb-4">
+                                        <label for="select-type" class="block text-gray-700 font-bold mb-2">Is
+                                            Custom</label>
+                                        <select class="form-control single-select" id="select-type"
+                                            wire:model="selectType" wire:change="isCustom">
+                                            <option value="1">Yes</option>
+                                            <option value="0" selected>No</option>
+                                        </select>
+                                        @error('is_required')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    @if ($is_custom)
+                                        <div class="col-6 mb-4">
+                                            <label for="select-type" class="block text-gray-700 font-bold mb-2">Is
+                                                Custom</label>
+                                            <select class="form-control single-select" id="select-type"
+                                                wire:model="selectType" >
+                                                <option value="1">Yes</option>
+                                                <option value="0" selected>No</option>
+                                            </select>
+                                            @error('is_required')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
+                                @endif
 
                                 @if ($is_option)
                                     <table class="table table-responsive">
@@ -247,18 +276,19 @@
 
                                 <label class="form-label" for="status">Payment Get Way</label>
                                 <select id="status" class="form-control" wire:model="getwayId">
-                                   @foreach ($paymentgetways as $label)
+                                    @foreach ($paymentgetways as $label)
                                         @php
                                             $i = '';
                                         @endphp
                                         @foreach ($getways as $item)
                                             @php
-                                                if($item->paymentgetway_id == $label->id) {
-                                                    $i = 'disabled';      
+                                                if ($item->paymentgetway_id == $label->id) {
+                                                    $i = 'disabled';
                                                 }
                                             @endphp
                                         @endforeach
-                                        <option value="{{ $label->id }}" {{$i}}>{{ $label->name }}</option>
+                                        <option value="{{ $label->id }}" {{ $i }}>{{ $label->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('paymentgetways')
@@ -272,7 +302,7 @@
 
                         </div>
                         <div class="col-md-12">
-                        
+
                             <ul>
                                 @foreach ($getways as $settingWithGetway)
                                     <li>{{ $settingWithGetway->getway->name }} <a class="text-danger"

@@ -110,7 +110,7 @@
                                             <td>
                                                 <button style="font-size: 12px;"
                                                     wire:click="status_update({{ $ptc->id }})"
-                                                    class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold ">
+                                                    class="btn bg-blue-500 hover:bg-blue-700 text-white font-bold " >
                                                     @if ($ptc->status == 1)
                                                         Inactive
                                                     @else
