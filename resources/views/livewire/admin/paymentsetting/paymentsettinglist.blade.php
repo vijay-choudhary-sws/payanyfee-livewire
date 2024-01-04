@@ -108,8 +108,7 @@
                                             <td>
                                                 <button style="font-size: 12px;"
                                                     wire:click="status_update({{ $Paymentsetting->id }})"
-                                                    class="btn btn-info btn-sm"
-                                                    onclick="return confirm('Are you sure you want to change this Paymentsetting status?');">
+                                                    class="btn btn-info btn-sm" wire:confirm="Are you sure you want to change this Paymentsetting status?">
                                                     @if ($Paymentsetting->status == 0)
                                                         Inactive
                                                     @else
