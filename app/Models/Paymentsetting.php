@@ -23,4 +23,8 @@ class Paymentsetting extends Model
         ];
     }
 
+    public function getway(){
+        
+    }
+
 }

@@ -2,15 +2,15 @@
 
 namespace App\Http\Livewire\Front;
 
-use App\Models\{InputMeta,Payment, Paymentgetways, Paymentsetting,PaymentMeta,PaymentMetaMultiple};
-use Livewire\Attributes\Layout;
-use Livewire\Attributes\Validate;
+use App\Models\{InputMeta,Payment, Paymentgetways, Paymentsetting,PaymentMeta,PaymentMetaMultiple, SettingWithGetways};
+use Livewire\Attributes\{Layout,Validate};
+// use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('livewire.admin.layouts.applogin')]
 class PaymentPreview extends Component
 {
-    public $payment_id,$payments,$input_data,$paymentsetting,$multiplevalue,$formdata,$amount,$geolocation,$paymentGateways;
+    public $payment_id,$payments,$input_data,$paymentsetting,$multiplevalue,$formdata,$amount,$geolocation,$paymentGateways,$paygetway;
     public $showEditModal = false;
 
     #[Validate('required',message: 'Please select any gateway.')] 
@@ -23,6 +23,9 @@ class PaymentPreview extends Component
         $this->payments = Payment::with('paymentMeta.paymentMetaMultiple')->find($this->payment_id);
         $this->input_data = InputMeta::where('paymentsetting_id', $this->payments->paymentsetting_id)->orderBy('order_by')->get();
         $this->paymentGateways = Paymentgetways::whereStatus(1)->get();
+        $this->paygetway = SettingWithGetways::with('getway')->where('paymentsetting_id', $this->payments->paymentsetting_id)->get();
+
+        // echo "<pre>";print_r($this->paygetway->toArray());die;
 
         foreach ($this->payments->paymentMeta  as $input) {
 
@@ -38,7 +41,7 @@ class PaymentPreview extends Component
 
         $this->amount = $this->payments->amount;
         $this->geolocation = 'IN';
-        // $this->paymethod = 'paytm';
+        
     }
     
     public function update()
@@ -75,17 +78,23 @@ class PaymentPreview extends Component
     {
         return view('\livewire.front.payment-preview');
     }
+
     public function edit()
     {
         $this->showEditModal = true;
     }
+
     public function close()
     {
         $this->showEditModal = false;
     }
+
     public function paynow()
     {
         $this->validate();
+
+        Payment::whereId($this->payment_id)
+        ->update(['paymentgetway_id'=>$this->paymethod]);
         
         return $this->redirect(route('payment.paycheck-out',[base64_encode($this->payment_id),base64_encode($this->paymethod)]), navigate: true);
     }

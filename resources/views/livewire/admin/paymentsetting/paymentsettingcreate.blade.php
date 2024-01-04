@@ -9,11 +9,11 @@
                     <h5 class="mb-0">Payment Setting Detail</h5>
                   </div>
                   <div class="ms-auto text-end col-3">
-                    <div class="btn-group AddbtnPadding">
+                    {{-- <div class="btn-group AddbtnPadding">
                         <button wire:click="create" class="btn btn-primary mt-2 mt-lg-0 mb-">
                             Add Field
                         </button>
-                    </div>
+                    </div> --}}
                 </div> 
             </div>
 
