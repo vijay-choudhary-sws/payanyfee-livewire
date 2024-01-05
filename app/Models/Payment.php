@@ -15,20 +15,8 @@ class Payment extends Model
     {
         return $this->hasMany(PaymentMeta::class);
     }
-
     public function paymentsetting()
     {
         return $this->belongsTo(Paymentsetting::class);
     }
-
-    public function paymentGetway()
-    {
-        return $this->belongsTo(Paymentgetways::class,'paymentgetway_id');
-    }
-
-    public function paymentMode()
-    {
-        return $this->belongsTo(PaymentMode::class,'paymentmode_id');
-    }
-
 }

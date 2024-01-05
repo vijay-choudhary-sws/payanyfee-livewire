@@ -31,7 +31,7 @@
                                                 {{ $mode->paymentMode->name }}</label>
                                         </td>
                                         <td class="text-end">{{ $payment->amount }}</td>
-                                        <td class="text-end">{{ $mode->amount }} {{$mode->is_percent ? '%' : ''}}</td>
+                                        <td class="text-end">{{ $mode->amount }}</td>
                                         <td class="text-end">
                                             @if ($mode->is_percent)
                                                 {{ $payment->amount + ($payment->amount * $mode->amount) / 100 }}
