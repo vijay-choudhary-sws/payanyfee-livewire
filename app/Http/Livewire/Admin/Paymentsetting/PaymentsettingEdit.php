@@ -94,7 +94,15 @@ class PaymentsettingEdit extends Component
 
     public function isOption()
     {
-       
+        $input_type = InputType::find($this->input_type);
+
+        $this->is_select = $input_type->type == 'select' ? true : false;
+        $this->is_option = $input_type->is_option == '1' || $input_type->type == 'select' ? true : false;
+
+        $this->i = 2;
+        $this->option = [1];
+        $this->optionvalue = [];
+        $this->optionlabel = [];
     }
     
 
