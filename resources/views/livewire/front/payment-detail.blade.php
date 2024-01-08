@@ -44,20 +44,21 @@
                                                                     class="form-control" id="phone"
                                                                     placeholder="Enter your number">
                                                             </div>
+                                                            {{-- <b>{{ count($input_data) }}</b> --}}
                                                             @foreach ($input_data as $d)
-
-                                                            
-                                                            @if ($d->input_select_data)
-                                                            <livewire:is :component="'front.common.ExistingSelect'"
-                                                                livewire:common. :in_data="$d" :is_front="$front"
-                                                                :wire:key="$d->id" wire:model="formdata.{{ $d->id }}"
-                                                               />
-                                                            @else
-                                                            <livewire:is @saved="likeUpdated" :component="'front.common.' .
-                                                                $d->inputType->tag_name" livewire:common. :in_data="$d"
-                                                                :is_front="$front" :wire:key="$d->id"
-                                                                wire:model="formdata.{{ $d->id }}"   />
-                                                            @endif
+                                                            {{-- {{ $d->inputType->tag_name }} --}}
+                                                                @if ($d->input_select_data)
+                                                                    <livewire:is :component="'front.common.ExistingSelect'" livewire:common.
+                                                                        :in_data="$d" :is_front="$front"
+                                                                        :wire:key="$d->id"
+                                                                        wire:model="formdata.{{ $d->id }}" />
+                                                                @else
+                                                                    <livewire:is :component="'front.common.' .
+                                                                        $d->inputType->tag_name" livewire:common.
+                                                                        :in_data="$d" :is_front="$front"
+                                                                        :wire:key="$d->id"
+                                                                        wire:model="formdata.{{ $d->id }}" />
+                                                                @endif
                                                             @endforeach
 
                                                             <div class="col-md-12 mb-2" id="amountChangelable">
@@ -76,9 +77,9 @@
                                                                             </span>
                                                                         </div>
                                                                         <input type="number" class="form-control"
-                                                                            id="amount" wire:model="amount" value="0"
-                                                                            autocomplete="off" @if($amountType==1)
-                                                                            disabled @endif>
+                                                                            id="amount" wire:model.live="amount"
+                                                                            value="0" autocomplete="off"
+                                                                            @if ($amountType == 1) disabled @endif>
                                                                     </div>
                                                                 </div>
                                                             </div>

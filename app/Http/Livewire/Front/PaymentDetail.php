@@ -9,6 +9,8 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\On;
+use Livewire\Livewire;
 
 #[Layout('livewire.admin.layouts.applogin')]
 class PaymentDetail extends Component
@@ -16,9 +18,16 @@ class PaymentDetail extends Component
     public $paymentMetas, $paymentsetting, $geolocation, $Categories, $paymentType, $input_data, $FormInput, $front = true, $formdata, $amount, $name, $email, $phone, $amountType;
     protected $listeners = ['store'];
 
+    #[On('amountchange')]
+    public function amountchange($id){
+
+        $this->amount =  $id;
+    }
+
     public function mount($slug)
     {
-
+        
+        $this->amount = 0;
         $this->paymentsetting = Paymentsetting::whereSlug($slug)->first();          
         $this->amountType = $this->paymentsetting->amount_type;
         if($this->amountType == 1){
@@ -27,25 +36,29 @@ class PaymentDetail extends Component
         $this->input_data = InputMeta::where('paymentsetting_id', $this->paymentsetting->id)->orderBy('order_by')->get();
         $this->formdata = [];
 
-        // echo "<pre>";print_r($this->input_data->toArray());die;
+        
 
         foreach ($this->input_data as $input) {
             
             if ($input->inputType->type == 'radio' || $input->inputType->type == 'checkbox' || ($input->inputType->type == 'select' && $input->input_select_data == null) || ($input->inputType->type == 'select_amount' && $input->input_select_data == null)) {
 
-                if ($input->inputType->type == 'checkbox') {
+                if ($input->inputType->type == 'checkbox' ) {
                     $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')?->option_value];
-                }  elseif ($input->inputType->type == 'select_amount') {
-                    $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')?->option_amount];
+                
                 }else {
                     $this->formdata[$input->id] = $input->metaOption->firstWhere('is_default', '1')?->option_value;
+                    if($input->inputType->type == 'select_amount'){
+                        $this->amount = $input->metaOption->firstWhere('is_default', '1')?->option_value;
+                    }
                 }
             }
         }
+
     }
 
     public function render()
     {
+
         return view('livewire.front.payment-detail');
     }
 
