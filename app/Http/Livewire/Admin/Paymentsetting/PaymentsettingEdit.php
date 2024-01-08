@@ -30,7 +30,8 @@ class PaymentsettingEdit extends Component
     #[Validate('required')]
     public $status = '';
     public $id;
-    public $Paymentsetting;
+
+    public $Paymentsetting = [];
     public $showEditModal = false;
     public $Editfields;
     public $heading = 'Payment Setting';
@@ -48,6 +49,7 @@ class PaymentsettingEdit extends Component
     public $slug_name;
     public $optionvalue = [];
     public $optionlabel = [];
+    public $optionamount = [];
     public $optionradio;
     public $i = 1;
     public $option = [];
@@ -58,7 +60,11 @@ class PaymentsettingEdit extends Component
     public $paymentgetways;
     public $showSaveButton = false;
     protected $listeners = ['removeInput'];
-
+    public $amountType;    
+    public $fixed_amount;    
+    public $is_amount = false;
+    public $is_amount_option = false;
+    public $is_one_time = true;
     public function create()
     {
         $field = InputType::all();
@@ -84,11 +90,15 @@ class PaymentsettingEdit extends Component
         $this->cc_email = $paymentsettings->cc_email;
         $this->bcc_email = $paymentsettings->bcc_email;
         $this->status = $paymentsettings->status;
+        $this->fixed_amount = $paymentsettings->fixed_amount;
+        $this->amountType = $paymentsettings->amount_type;
+       
         $this->Paymentsetting = $paymentsettings;
         $getwayId  = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
-        $this->input_select_data = Inputselectdata::all();
+        $this->input_select_data = Inputselectdata::where('status',1)->get();
 
         $this->selectdata = '';
+        
         $this->inputDataBox();
     }
 
@@ -96,16 +106,23 @@ class PaymentsettingEdit extends Component
     {
         $input_type = InputType::find($this->input_type);
 
-        $this->is_select = $input_type->type == 'select' ? true : false;
-        $this->is_option = $input_type->is_option == '1' || $input_type->type == 'select' ? true : false;
+        $this->is_select = $input_type->type == 'select' || $input_type->type == 'select_amount' ? true : false;
+        $this->is_option = $input_type->is_option ;
+        $this->is_amount_option = $input_type->is_amount_option ;
 
         $this->i = 2;
         $this->option = [1];
         $this->optionvalue = [];
         $this->optionlabel = [];
+        $this->optionamount = [];
     }
     
 
+    public function isAmount()
+    {       
+        $this->amountType = $this->amountType;
+        $this->fixed_amount = 0;
+    }
     public function isCustom()
     {
         if ($this->selectType == 1) {
@@ -116,6 +133,7 @@ class PaymentsettingEdit extends Component
             $this->option = [1];
             $this->optionvalue = [];
             $this->optionlabel = [];
+            $this->optionamount = [];
         } else {
             $this->is_custom = true;
             $this->is_option = false;
@@ -137,12 +155,15 @@ class PaymentsettingEdit extends Component
 
         if ($this->id) {
             $post = Paymentsetting::findOrFail($this->id);
+                    
             $post->update([
                 'title' => $this->title,
                 'email' => $this->email,
                 'cc_email' => $this->cc_email,
                 'bcc_email' => $this->bcc_email,
                 'status' => $this->status,
+                'amount_type' => $this->amountType,
+                'fixed_amount' => $this->fixed_amount,
             ]);
 
 
@@ -185,7 +206,7 @@ class PaymentsettingEdit extends Component
     public function store()
     {
 
-        try {
+        // try {
             if ($this->optionvalue) {
                 $this->validate([
                     'label' => 'required',
@@ -211,39 +232,50 @@ class PaymentsettingEdit extends Component
                 'placeholder' => $this->placeholder,
                 'is_required' => $this->is_required,
                 'order_by' => count($this->input_data) + 1,
+                'is_custom' => $this->selectType,
+                'input_select_data' => $this->selectdata? $this->selectdata : null,
             ])->id;
 
             foreach ($this->optionvalue as $key => $val) {
-                MetaOption::create([
-                    'option_value' => $val,
-                    'input_meta_id' => $lastInputMetaid,
-                    'label' => $this->optionlabel[$key],
-                    'is_default' => $key == $this->optionradio ? 1 : 0,
-                ]);
+               
+                $metaoption = MetaOption::firstOrNew(['id' => '']);
+                    $metaoption->option_value = $val;
+                    if(sizeof($this->optionamount) > 0){
+                        $metaoption->option_amount = $this->optionamount[$key];
+                    }
+                   
+                    $metaoption->input_meta_id = $lastInputMetaid;
+                    $metaoption->label = $this->optionlabel[$key];
+                    $metaoption->is_default = $key == $this->optionradio ? 1 : 0;
+                    $metaoption->save();
             }
 
             $this->dispatch('toastSuccess', $this->heading . ' create successfully .');
             $this->close();
             $this->reset('label', 'select_type', 'paymentsetting_id', 'input_type', 'input_name', 'placeholder', 'is_required');
 
+            $input_type_data = InputType::where('id',$this->input_type)->where('is_one_time',1)->first();
+            if($input_type_data){
+                $is_one_time = false;
+            }
             $this->inputDataBox();
             $this->is_option = false;
             $this->i = 1;
             $this->option = [];
-        } catch (ValidationException $e) {
-            $errors = $e->errors();
-            $errorMessages = [];
+        // } catch (ValidationException $e) {
+        //     $errors = $e->errors();
+        //     $errorMessages = [];
 
-            foreach ($errors as $field => $messages) {
-                $errorMessages[] = $field . ': ' . implode(', ', $messages);
-            }
+        //     foreach ($errors as $field => $messages) {
+        //         $errorMessages[] = $field . ': ' . implode(', ', $messages);
+        //     }
 
-            $errorMessage = implode('<br>', $errorMessages);
+        //     $errorMessage = implode('<br>', $errorMessages);
 
-            $this->dispatch('toastError', $errorMessage);
-        } catch (\Exception $e) {
-            $this->dispatch('toastError', 'An error occurred while processing your request.');
-        }
+        //     $this->dispatch('toastError', $errorMessage);
+        // } catch (\Exception $e) {
+        //     $this->dispatch('toastError', 'An error occurred while processing your request.');
+        // }
     }
 
 
@@ -290,14 +322,13 @@ class PaymentsettingEdit extends Component
             $update = InputMeta::where('id', $item['value'])->update(['order_by' => $item['order']]);
         }
 
-
         $this->inputDataBox();
-        $this->dispatch('toastSuccess', 'Input successfully ordered.');
+        $this->dispatch('toastSuccess', 'Order Changed Successfully.');
     }
 
     public function inputDataBox()
     {
-        $this->input_data = InputMeta::wherePaymentsetting_id($this->id)->orderBy('order_by', 'ASC')->get();
+        $this->input_data = InputMeta::with('existingSelect')->wherePaymentsetting_id($this->id)->orderBy('order_by', 'ASC')->get();
     }
 
 

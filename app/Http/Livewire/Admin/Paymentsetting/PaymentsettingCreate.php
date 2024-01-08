@@ -69,7 +69,6 @@ class PaymentsettingCreate extends Component
                 'cc_email' => 'required|email',
                 'bcc_email' => 'required|email',
                 'status' => 'required',
-                // Add more validation rules for other fields
             ]);
     
             $this->slug = SlugService::createSlug(Paymentsetting::class, 'slug', $this->title);
