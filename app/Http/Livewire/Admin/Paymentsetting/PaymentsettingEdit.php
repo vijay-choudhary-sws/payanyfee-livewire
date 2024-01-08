@@ -39,7 +39,7 @@ class PaymentsettingEdit extends Component
     public $select_type, $getwayId = '';
     public $type_id = 1;
     public $input_data;
-    public $paymentsetting_id, $input_select_data, $selectdata;
+    public $paymentsetting_id, $input_select_data, $selectdata,$inputtype;
     public $input_tag;
     public $input_type;
     public $input_name;
@@ -67,10 +67,21 @@ class PaymentsettingEdit extends Component
     public $is_one_time = true;
     public function create()
     {
-        $field = InputType::all();
+        $inputtypes = InputType::all();
+        
+        $isonetime = [];
+        foreach($inputtypes as $types){
+            if($types->is_one_time){
+                if(InputMeta::where(['paymentsetting_id'=>$this->id,'input_type_id'=>$types->id])->count() > 0){
+                    $isonetime = [$types->id];
+                }
+            }
+        }
+
+        $this->inputtype = $inputtypes->whereNotIn('id',$isonetime);
+
         $this->showEditModal = true;
-        $this->Editfields = $field;
-    }
+     }
 
 
     public function close()
@@ -180,13 +191,12 @@ class PaymentsettingEdit extends Component
         $getways = SettingWithGetways::with('getway')->where('paymentsetting_id', $this->id)->get();
         $paymentsetting_meta = PaymentsettingMeta::where('paymentsetting_id', $this->id)->get();
         $inputselectdatas = Inputselectdata::all();
-        $inputtype = InputType::all();
-
+       
         $Fields = Field::all();
         $class = "form-control";
 
 
-        return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'inputtype', 'getways'));
+        return view('livewire.admin.paymentsetting.Paymentsettingedit', compact('paymentsetting_meta', 'inputselectdatas', 'Fields', 'class', 'getways'));
     }
 
     public function Inputdelete()
@@ -206,7 +216,7 @@ class PaymentsettingEdit extends Component
     public function store()
     {
 
-        // try {
+        try {
             if ($this->optionvalue) {
                 $this->validate([
                     'label' => 'required',
@@ -262,20 +272,20 @@ class PaymentsettingEdit extends Component
             $this->is_option = false;
             $this->i = 1;
             $this->option = [];
-        // } catch (ValidationException $e) {
-        //     $errors = $e->errors();
-        //     $errorMessages = [];
+        } catch (ValidationException $e) {
+            $errors = $e->errors();
+            $errorMessages = [];
 
-        //     foreach ($errors as $field => $messages) {
-        //         $errorMessages[] = $field . ': ' . implode(', ', $messages);
-        //     }
+            foreach ($errors as $field => $messages) {
+                $errorMessages[] = $field . ': ' . implode(', ', $messages);
+            }
 
-        //     $errorMessage = implode('<br>', $errorMessages);
+            $errorMessage = implode('<br>', $errorMessages);
 
-        //     $this->dispatch('toastError', $errorMessage);
-        // } catch (\Exception $e) {
-        //     $this->dispatch('toastError', 'An error occurred while processing your request.');
-        // }
+            $this->dispatch('toastError', $errorMessage);
+        } catch (\Exception $e) {
+            $this->dispatch('toastError', 'An error occurred while processing your request.');
+        }
     }
 
 

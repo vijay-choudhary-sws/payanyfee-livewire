@@ -91,7 +91,7 @@
                                             <label for="selectdata" class="block text-gray-700 font-bold mb-2">Input
                                                 Select Data</label>
                                             <select class="form-control single-select" id="selectdata"
-                                                wire:model="selectdata">
+                                                wire:model="selectdata" >
                                                 <option value="" selected disabled>--select--</option>
                                                 @foreach ($input_select_data as $item)
                                                     <option value="{{ $item->id }}">{{ $item->selectTitle }}

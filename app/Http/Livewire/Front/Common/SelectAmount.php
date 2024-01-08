@@ -20,4 +20,8 @@ class SelectAmount extends Component
         return view('\livewire.front.common.select-amount');
     }
 
+    public function amountchange(){
+        $this->dispatch('amountchange',id: $this->typeselect); 
+    }
+
 }

@@ -15,6 +15,7 @@ class Textarea extends Component
 
     public function render()
     {
+     
         return view('\livewire.front.common.textarea');
     }
    
