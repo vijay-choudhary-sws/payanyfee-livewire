@@ -2,24 +2,23 @@
 
 namespace App\Http\Livewire\Front;
 
-use App\Models\{InputMeta, Payment, Paymentgetways, Paymentsetting, PaymentMeta, PaymentMetaMultiple, SettingWithGetways};
-use Livewire\Attributes\{Layout, Validate};
+use App\Models\{InputMeta,Payment, Paymentgetways, Paymentsetting,PaymentMeta,PaymentMetaMultiple, SettingWithGetways};
+use Livewire\Attributes\{Layout,Validate};
 // use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('livewire.admin.layouts.applogin')]
 class PaymentPreview extends Component
 {
-    public $payment_id, $payments, $input_data, $paymentsetting, $multiplevalue, $formdata, $amount, $geolocation, $paymentGateways, $paygetway;
+    public $payment_id,$payments,$input_data,$paymentsetting,$multiplevalue,$formdata,$amount,$geolocation,$paymentGateways,$paygetway;
     public $showEditModal = false;
-    public $name, $email, $phone;
 
-    #[Validate('required', message: 'Please select any gateway.')]
+    #[Validate('required',message: 'Please select any gateway.')] 
     public $paymethod;
 
     public function mount($payment_id)
     {
-
+       
         $this->payment_id = base64_decode($payment_id);
         $this->payments = Payment::with('paymentMeta.paymentMetaMultiple')->find($this->payment_id);
         $this->input_data = InputMeta::where('paymentsetting_id', $this->payments->paymentsetting_id)->orderBy('order_by')->get();
@@ -29,7 +28,6 @@ class PaymentPreview extends Component
         // echo "<pre>";print_r($this->paygetway->toArray());die;
 
         foreach ($this->payments->paymentMeta  as $input) {
-
 
             if (count($input->paymentMetaMultiple) > 0) {
                 foreach ($input->paymentMetaMultiple as $val) {
@@ -41,27 +39,16 @@ class PaymentPreview extends Component
             }
         }
 
-        // echo "<pre>";
-        // print_r($this->formdata);
-        // die;
-
-        $this->name = $this->payments->name;
-        $this->email = $this->payments->email;
-        $this->phone = $this->payments->phone;
         $this->amount = $this->payments->amount;
         $this->geolocation = 'IN';
+        
     }
-
+    
     public function update()
     {
 
         $formdatas = $this->formdata;
-        $this->payments->update([
-            'amount' => $this->amount,
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-        ]);
+        $this->payments->update(['amount'=> $this->amount]);
         foreach ($formdatas as $key => $formdata) {
             $payment = PaymentMeta::find($key);
             if (is_array($formdata)) {
@@ -81,7 +68,7 @@ class PaymentPreview extends Component
                 $payment->update(['meta_value' => $formdata]);
             }
 
-            $this->dispatch('toastSuccess', 'Form Successfully Updated.');
+            $this->dispatch('toastSuccess','Form Successfully Updated.');
 
             $this->showEditModal = false;
         }
@@ -107,8 +94,8 @@ class PaymentPreview extends Component
         $this->validate();
 
         Payment::whereId($this->payment_id)
-            ->update(['paymentgetway_id' => $this->paymethod]);
-
-        return $this->redirect(route('payment.paycheck-out', [base64_encode($this->payment_id), base64_encode($this->paymethod)]), navigate: true);
+        ->update(['paymentgetway_id'=>$this->paymethod]);
+        
+        return $this->redirect(route('payment.paycheck-out',[base64_encode($this->payment_id),base64_encode($this->paymethod)]), navigate: true);
     }
 }

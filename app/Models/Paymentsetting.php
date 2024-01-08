@@ -11,7 +11,7 @@ class Paymentsetting extends Model
     use HasFactory,Sluggable;
 
     protected $fillable = [
-        'title','slug','email','cc_email','bcc_email','status','amount_type','fixed_amount'
+        'title','slug','email','cc_email','bcc_email','status'
     ];
     
     public function sluggable(): array

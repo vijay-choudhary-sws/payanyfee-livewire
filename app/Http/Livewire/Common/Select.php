@@ -15,5 +15,5 @@ class Select extends Component
     
     public function removeInput($id){
         $this->dispatch('removeInput',$id);
-    }
+     }
 }

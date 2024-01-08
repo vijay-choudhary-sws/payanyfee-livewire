@@ -13,7 +13,7 @@ class InputMeta extends Model
 
     protected $table = 'input_metas';
     protected $fillable = [
-        'label','select_type','paymentsetting_id','input_type_id','input_name','placeholder','is_required','order_by','is_custom','input_select_data'
+        'label','select_type','paymentsetting_id','input_type_id','input_name','placeholder','is_required','order_by'
     ];
 
    
@@ -28,9 +28,5 @@ class InputMeta extends Model
         return $this->hasMany(MetaOption::class);
     }
 
-    public function existingSelect()
-    {
-        return $this->belongsTo(Inputselectdata::class,'input_select_data');
-    }
     
 }
