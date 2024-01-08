@@ -33,18 +33,18 @@ class PaymentsettingEdit extends Component
     public $Paymentsetting;
     public $showEditModal = false;
     public $Editfields;
-    public $heading = 'Payment Setting';
+    public $heading = 'Paymentsetting';
     public $label;
-    public $select_type, $getwayId = '';
+    public $select_type, $getwayId;
     public $type_id = 1;
     public $input_data;
-    public $paymentsetting_id, $input_select_data, $selectdata;
+    public $paymentsetting_id;
     public $input_tag;
     public $input_type;
     public $input_name;
     public $placeholder = '';
     public $is_required = '0';
-    public $selectType = '1';
+    public $selectType = '0';
     public $slug_name;
     public $optionvalue = [];
     public $optionlabel = [];
@@ -56,7 +56,6 @@ class PaymentsettingEdit extends Component
     public $is_custom = false;
     public $orderno = 1;
     public $paymentgetways;
-    public $showSaveButton = false;
     protected $listeners = ['removeInput'];
 
     public function create()
@@ -75,7 +74,7 @@ class PaymentsettingEdit extends Component
     public function mount(Paymentsetting $paymentsettings)
     {
 
-        $this->paymentgetways = Paymentgetways::get();
+        $this->paymentgetways = Paymentgetways::all();
         // echo"<pre>";print_r($this->paymentgetways);die;
         $this->id = $paymentsettings->id;
         $this->title = $paymentsettings->title;
@@ -85,10 +84,9 @@ class PaymentsettingEdit extends Component
         $this->bcc_email = $paymentsettings->bcc_email;
         $this->status = $paymentsettings->status;
         $this->Paymentsetting = $paymentsettings;
-        $getwayId  = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
-        $this->input_select_data = Inputselectdata::all();
+        $getways = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
 
-        $this->selectdata = '';
+
         $this->inputDataBox();
     }
 
@@ -104,7 +102,6 @@ class PaymentsettingEdit extends Component
         $this->optionvalue = [];
         $this->optionlabel = [];
     }
-    
 
     public function isCustom()
     {
@@ -304,25 +301,16 @@ class PaymentsettingEdit extends Component
     public function SettingWithGetway()
     {
 
-        SettingWithGetways::firstOrCreate([
+        SettingWithGetways::create([
             'paymentsetting_id' => $this->id,
             'paymentgetway_id' => $this->getwayId,
         ]);
-
-        $this->showSaveButton = false;
-    }
-
-    public function buttondisbeld()
-    {
-        $this->showSaveButton = true;
     }
 
 
     public function removese($id)
     {
 
-
         SettingWithGetways::where('id', $id)->delete();
-        $this->dispatch('toastSuccess', 'settingwithgetway remove successfully');
     }
 }
