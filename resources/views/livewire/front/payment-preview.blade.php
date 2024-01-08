@@ -195,46 +195,45 @@
                                                                                     wire:key="{{ $item->id }}"
                                                                                     wire:model="formdata.{{ $item->id }}" />
                                                                             @endif
-                                                                        @endforeach
+                                                                        @endif
                                                                     @endforeach
+                                                                @endforeach
 
-                                                                    <div class="col-md-12 mt-3"
-                                                                        id="amountChangelable">
+                                                                <div class="col-md-12 mt-3" id="amountChangelable">
 
-                                                                        <div class="form-group ">
-                                                                            <label
-                                                                                class="form-label float-left">Amount</label>
-                                                                            <div class="input-group mb-3">
-                                                                                <div class="input-group-prepend">
-                                                                                    <span class="input-group-text"
-                                                                                        id="basic-addon1">
-                                                                                        @if ($geolocation == 'IN')
-                                                                                            INR
-                                                                                        @else
-                                                                                            $
-                                                                                        @endif
-                                                                                    </span>
-                                                                                </div>
-                                                                                <input type="number"
-                                                                                    class="form-control"
-                                                                                    id="amount" wire:model="amount"
-                                                                                    value="0" required
-                                                                                    autocomplete="off">
+                                                                    <div class="form-group ">
+                                                                        <label
+                                                                            class="form-label float-left">Amount</label>
+                                                                        <div class="input-group mb-3">
+                                                                            <div class="input-group-prepend">
+                                                                                <span class="input-group-text"
+                                                                                    id="basic-addon1">
+                                                                                    @if ($geolocation == 'IN')
+                                                                                        INR
+                                                                                    @else
+                                                                                        $
+                                                                                    @endif
+                                                                                </span>
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="col-12">
-                                                                            <div class="flex justify-end">
-                                                                                <button wire:click="update"
-                                                                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Update
-                                                                                    <i wire:loading
-                                                                                        wire:target="submitForm"
-                                                                                        class="st_loader spinner-border spinner-border-sm"></i></button>
-                                                                                <button type="button"
-                                                                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                                                                                    wire:click="close">Cancel</button>
-                                                                            </div>
+                                                                            <input type="number" class="form-control"
+                                                                                id="amount" wire:model="amount"
+                                                                                value="0" required
+                                                                                autocomplete="off">
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-12">
+                                                                        <div class="flex justify-end">
+                                                                            <button wire:click="update"
+                                                                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Update
+                                                                                <i wire:loading
+                                                                                    wire:target="submitForm"
+                                                                                    class="st_loader spinner-border spinner-border-sm"></i></button>
+                                                                            <button type="button"
+                                                                                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                                                                                wire:click="close">Cancel</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

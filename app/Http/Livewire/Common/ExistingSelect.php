@@ -15,7 +15,7 @@ class ExistingSelect extends Component
     {
         $existingdata = DB::table($this->in_data->existingSelect->table_name)->get();
         // echo "<pre>";print_r($existingdata);die;
-
+// dd($existingdata);
         return view('livewire.common.existing-select',compact('existingdata'));
     }
 
