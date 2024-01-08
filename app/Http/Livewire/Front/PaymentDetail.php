@@ -27,16 +27,18 @@ class PaymentDetail extends Component
         $this->input_data = InputMeta::where('paymentsetting_id', $this->paymentsetting->id)->orderBy('order_by')->get();
         $this->formdata = [];
 
+        // echo "<pre>";print_r($this->input_data->toArray());die;
 
         foreach ($this->input_data as $input) {
+            
             if ($input->inputType->type == 'radio' || $input->inputType->type == 'checkbox' || ($input->inputType->type == 'select' && $input->input_select_data == null) || ($input->inputType->type == 'select_amount' && $input->input_select_data == null)) {
 
                 if ($input->inputType->type == 'checkbox') {
-                    $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')->option_value];
+                    $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')?->option_value];
                 }  elseif ($input->inputType->type == 'select_amount') {
-                    $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')->option_amount];
+                    $this->formdata[$input->id] = [$input->metaOption->firstWhere('is_default', '1')?->option_amount];
                 }else {
-                    $this->formdata[$input->id] = $input->metaOption->firstWhere('is_default', '1')->option_value;
+                    $this->formdata[$input->id] = $input->metaOption->firstWhere('is_default', '1')?->option_value;
                 }
             }
         }
