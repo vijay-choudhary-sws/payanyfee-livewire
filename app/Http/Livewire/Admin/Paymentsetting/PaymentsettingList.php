@@ -92,20 +92,6 @@ class PaymentsettingList extends Component
         $this->dispatch('toastSuccess',$this->heading.' successfully deleted.');
 
     }
-
-
-     // public function delete(Paymentsetting $Paymentsetting)
-    // {
-    //     // Delete related PaymentsettingMeta data
-    //     if ($Paymentsetting->paymentsettingMeta) {
-    //         $Paymentsetting->paymentsettingMeta->delete();
-    //     }
-    
-    //     // Delete the Paymentsetting
-    //     $Paymentsetting->delete();
-    
-    //     $this->dispatch('toastSuccess', $this->heading.' successfully deleted.');
-    // }
     
     public function status_update($paymentSettingId)
     {
@@ -114,14 +100,14 @@ class PaymentsettingList extends Component
         if ($Payments->status == 0) {
             $Payments->status = 1;
             $Payments->save();
-            $this->dispatch('toastSuccess','status successfully deleted.');
+            $this->dispatch('toastSuccess','status successfully changed.');
         } else {
             $Payments->status = 0;
             $Payments->save();
-            session()->flash('success', 'status deactivated successfully.');
+            $this->dispatch('toastSuccess','status successfully changed.');
+
         }
     
-        return redirect()->route('admin.paymentsettings');
     }
 
     public function view($id)

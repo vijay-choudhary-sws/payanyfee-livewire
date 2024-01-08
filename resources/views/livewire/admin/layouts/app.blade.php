@@ -97,12 +97,14 @@
 
     <script>
         let isToastActive = false;
+        
     
         window.addEventListener('toastSuccess', event => {
+            isToastActive = false;
             if (!isToastActive) {
                 isToastActive = true;
     
-                let message = event.detail;
+                message = event.detail;
                 toastr.options = {
                     "closeButton": true,
                     "progressBar": true,
@@ -115,10 +117,11 @@
         });
     
         window.addEventListener('toastError', event => {
+            isToastActive = false;
             if (!isToastActive) {
                 isToastActive = true;
     
-                let message = event.detail;
+                message = event.detail;
                 toastr.options = {
                     "closeButton": true,
                     "progressBar": true,
