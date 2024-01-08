@@ -27,22 +27,39 @@
                                                     <div class="p-2">
                                                         <div class="row align-items-center">
                                                             <div class="col-12">
-                                                                <label for="name" class="mb-2 float-left">Name</label>
-                                                                <input wire:model="name" type="text" class="form-control" id="name" placeholder="Enter your full name">
+                                                                <label for="name"
+                                                                    class="mb-2 float-left">Name</label>
+                                                                <input wire:model="name" type="text"
+                                                                    class="form-control" id="name"
+                                                                    placeholder="Enter your full name">
                                                             </div>
                                                             <div class="col-12">
-                                                                <label for="email" class="mb-2 float-left">Email</label>
-                                                                <input wire:model="email" type="email" class="form-control" id="email" placeholder="Enter your email">
+                                                                <label for="email"
+                                                                    class="mb-2 float-left">Email</label>
+                                                                <input wire:model="email" type="email"
+                                                                    class="form-control" id="email"
+                                                                    placeholder="Enter your email">
                                                             </div>
                                                             <div class="col-12">
-                                                                <label for="phone" class="mb-2 float-left">phone</label>
-                                                                <input wire:model="phone" type="number" class="form-control" id="phone" placeholder="Enter your number">
+                                                                <label for="phone"
+                                                                    class="mb-2 float-left">phone</label>
+                                                                <input wire:model="phone" type="number"
+                                                                    class="form-control" id="phone"
+                                                                    placeholder="Enter your number">
                                                             </div>
                                                             @foreach ($input_data as $d)
-                                                                <livewire:is :component="'front.common.' . $d->inputType->tag_name" livewire:common.
-                                                                    :in_data="$d" :is_front="$front"
-                                                                    :wire:key="$d->id"
-                                                                    wire:model="formdata.{{ $d->id }}" />
+                                                            @if ($d->input_select_data)
+                                                            <livewire:is :component="'front.common.ExistingSelect'" livewire:common.
+                                                                :in_data="$d" :is_front="$front"
+                                                                :wire:key="$d->id"
+                                                                wire:model="formdata.{{ $d->id }}" />
+                                                        @else
+                                                            <livewire:is :component="'front.common.' .
+                                                                $d->inputType->tag_name" livewire:common.
+                                                                :in_data="$d" :is_front="$front"
+                                                                :wire:key="$d->id"
+                                                                wire:model="formdata.{{ $d->id }}" />
+                                                        @endif
                                                             @endforeach
 
                                                             <div class="col-md-12 mt-3" id="amountChangelable">
@@ -62,13 +79,13 @@
                                                                         </div>
                                                                         <input type="number" class="form-control"
                                                                             id="amount" wire:model="amount"
-                                                                            value="0" autocomplete="off">
+                                                                            value="0" autocomplete="off"  @if($amountType == 1) disabled @endif>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="col-12">
                                                                 <button type="submit"
-                                                                    class="btn btn-dark btn-block w-100">
+                                                                    class="btn bg-dark text-white btn-block w-100">
                                                                     Submit
                                                                     <i wire:loading wire:target="submitForm"
                                                                         class="st_loader spinner-border spinner-border-sm"></i>

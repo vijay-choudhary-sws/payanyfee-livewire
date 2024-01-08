@@ -146,19 +146,49 @@
                             <h2 class="text-2xl font-bold mb-4">Edit Form</h2>
                             <div class="row">
                                 <div class="col-12">
-                                    <form class="form-signin form" id="myform" wire:submit="update" method="post">
-                                        {{ csrf_field() }}
+                                    {{-- <form class="form-signin form" id="myform" wire:submit="update" method="post">
+                                        {{ csrf_field() }} --}}
 
-                                        <div class="form-body">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-body" id="feepay">
-                                                        <div class="pb-3 rounded">
-                                                            <div class="p-2">
-                                                                <div class="row align-items-center">
-                                                                    @foreach ($input_data as $d)
-                                                                        @foreach ($payments->paymentMeta as $item)
-                                                                            @if ($d->id == $item->meta_name)
+                                    <div class="form-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-body" id="feepay">
+                                                    <div class="pb-3 rounded">
+                                                        <div class="p-2">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-12">
+                                                                    <label for="name"
+                                                                        class="mb-2 float-left">Name</label>
+                                                                    <input wire:model="name" type="text"
+                                                                        class="form-control" id="name"
+                                                                        value="{{ $name }}"
+                                                                        placeholder="Enter your full name">
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <label for="email"
+                                                                        class="mb-2 float-left">Email</label>
+                                                                    <input wire:model="email" type="email"
+                                                                        class="form-control" id="email"
+                                                                        value="{{ $email }}"
+                                                                        placeholder="Enter your email">
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <label for="phone"
+                                                                        class="mb-2 float-left">phone</label>
+                                                                    <input wire:model="phone" type="number"
+                                                                        class="form-control" id="phone"
+                                                                        value="{{ $phone }}"
+                                                                        placeholder="Enter your number">
+                                                                </div>
+                                                                @foreach ($input_data as $d)
+                                                                    @foreach ($payments->paymentMeta as $item)
+                                                                        @if ($d->id == $item->meta_name)
+                                                                            @if ($d->input_select_data)
+                                                                                <livewire:is :component="'front.common.ExistingSelect'"
+                                                                                    livewire:common. :in_data="$d"
+                                                                                    wire:key="{{ $item->id }}"
+                                                                                    wire:model="formdata.{{ $item->id }}" />
+                                                                            @else
                                                                                 <livewire:is :component="'front.common.' .
                                                                                     $d->inputType->tag_name"
                                                                                     livewire:common. :in_data="$d"
@@ -168,7 +198,8 @@
                                                                         @endforeach
                                                                     @endforeach
 
-                                                                    <div class="col-md-12 mt-3" id="amountChangelable">
+                                                                    <div class="col-md-12 mt-3"
+                                                                        id="amountChangelable">
 
                                                                         <div class="form-group ">
                                                                             <label
@@ -185,41 +216,37 @@
                                                                                     </span>
                                                                                 </div>
                                                                                 <input type="number"
-                                                                                    class="form-control" id="amount"
-                                                                                    wire:model="amount" value="0"
-                                                                                    required autocomplete="off">
+                                                                                    class="form-control"
+                                                                                    id="amount" wire:model="amount"
+                                                                                    value="0" required
+                                                                                    autocomplete="off">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-12">
+                                                                            <div class="flex justify-end">
+                                                                                <button wire:click="update"
+                                                                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Update
+                                                                                    <i wire:loading
+                                                                                        wire:target="submitForm"
+                                                                                        class="st_loader spinner-border spinner-border-sm"></i></button>
+                                                                                <button type="button"
+                                                                                    class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                                                                                    wire:click="close">Cancel</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-12">
-                                                                        <div class="flex justify-end">
-                                                                            <button wire:click="update" type="submit"
-                                                                                class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Update
-                                                                                <i wire:loading wire:target="submitForm"
-                                                                                    class="st_loader spinner-border spinner-border-sm"></i></button>
-                                                                            <button type="button"
-                                                                                class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
-                                                                                wire:click="close">Cancel</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            {{-- </form> --}}
                                         </div>
-
-                                    </form>
+                                    </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     @endif
 </div>

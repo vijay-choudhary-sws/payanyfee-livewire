@@ -99,6 +99,7 @@
         let isToastActive = false;
     
         window.addEventListener('toastSuccess', event => {
+             isToastActive = false;
             if (!isToastActive) {
                 isToastActive = true;
     
@@ -115,6 +116,7 @@
         });
     
         window.addEventListener('toastError', event => {
+             isToastActive = false;
             if (!isToastActive) {
                 isToastActive = true;
     

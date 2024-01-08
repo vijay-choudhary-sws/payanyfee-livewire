@@ -8,7 +8,6 @@
                             <div class='col-6 mt-2' style="font-size:20px">
                                 <h5 class="mb-0">Edit {{ $heading }}</h5>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -94,7 +93,7 @@
                                             <label for="select-type" class="block text-gray-700 font-bold mb-2">Is
                                                 Custom</label>
                                             <select class="form-control single-select" id="select-type"
-                                                wire:model="selectType" >
+                                                wire:model="selectType">
                                                 <option value="1">Yes</option>
                                                 <option value="0" selected>No</option>
                                             </select>
@@ -110,6 +109,9 @@
                                         <thead>
                                             <tr>
                                                 <th class="text-center">Value</th>
+                                                @if ($is_amount_option)
+                                                    <th class="text-center">Amount</th>
+                                                @endif
                                                 <th class="text-center">Label</th>
                                                 <th class="text-center">Is Default</th>
                                                 <th class="text-center"><button class="btn text-white btn-info btn-sm"
@@ -132,6 +134,19 @@
                                                             @enderror
                                                         </div>
                                                     </td>
+                                                    @if ($is_amount_option)
+                                                        <td>
+                                                            <div class="form-group">
+                                                                <input type="number" class="form-control"
+                                                                    placeholder="Enter option amount"
+                                                                    wire:model="optionamount.{{ $value }}">
+                                                                @error('optionamount.' . $value)
+                                                                    <span
+                                                                        class="text-danger error">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                        </td>
+                                                    @endif
                                                     <td>
                                                         <div class="form-group">
                                                             <input type="text" class="form-control"
@@ -231,6 +246,30 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="col-12 mb-2">
+                                    <label for="amount_type" class="block text-gray-700 font-bold mb-2">Amount
+                                        Type</label>
+                                    <select class="form-control single-select" id="amount_type"
+                                        wire:model="amountType" wire:change="isAmount">
+                                        <option value="0">Select</option>
+                                        <option value="1">Fixed Amount</option>
+                                        <option value="2">Manual</option>
+                                    </select>
+                                    @error('isAmount')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @if ($amountType == 1)
+                                    <div class="col-12 mb-1">
+                                        <label for="fixed_amount" class="block text-gray-700 font-bold mb-2">Fixed
+                                            Amount</label>
+                                        <input type="number" wire:model="fixed_amount" id="fixed_amount"
+                                            class="form-control" placeholder="Enter Fixed Amount">
+                                        @error('fixed_amount')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endif
                                 <div class="col-md-12">
                                     <div class="form-group mb-3">
                                         <label class="form-label" for="status">Status</label>
@@ -297,19 +336,34 @@
 
                             </div>
                             <div class="col-6 py-4">
-                                <button class="btn btn-primary" wire:click="SettingWithGetway">save</button>
+                                <button class="btn btn-primary"
+                                    @if ($showSaveButton) wire:click="SettingWithGetway" @else
+                                disabled @endif>save</button>
                             </div>
 
                         </div>
                         <div class="col-md-12">
 
-                            <ul>
-                                @foreach ($getways as $settingWithGetway)
-                                    <li>{{ $settingWithGetway->getway->name }} <a class="text-danger"
-                                            wire:click="removese({{ $settingWithGetway->id }})"
-                                            href="#">remove</a></li>
-                                @endforeach
-                            </ul>
+
+                            @foreach ($getways as $settingWithGetway)
+                                <span id="badge-dismiss-red"
+                                    class="inline-flex items-center px-2 py-1 m-1 text-sm font-medium text-red-800 bg-red-100 rounded dark:bg-red-900 dark:text-red-300">
+                                    {{ $settingWithGetway->getway->name }}
+                                    <button wire:confirm="Are you sure you want to delete this Payment Get Way?"
+                                        wire:click="removese({{ $settingWithGetway->id }})" type="button"
+                                        class="inline-flex items-center p-1  ms-2 text-sm text-red-400 bg-transparent rounded-sm hover:bg-red-200 hover:text-red-900 dark:hover:bg-red-800 dark:hover:text-red-300"
+                                        data-dismiss-target="#badge-dismiss-red" aria-label="Remove">
+                                        <svg aria-hidden="true" width="10" height="10"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                            <path stroke="currentColor" stroke-linecap="round"
+                                                stroke-linejoin="round" stroke-width="2"
+                                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                        </svg>
+
+                                    </button>
+                                </span>
+                            @endforeach
+
 
                         </div>
                         <div class="row" wire:sortable="updateInputOreder">
@@ -317,8 +371,13 @@
                             @foreach ($input_data as $d)
                                 <div class="col-md-12" wire:sortable.item="{{ $d->id }}"
                                     wire:key="order-{{ $d->id }}">
-                                    <livewire:is :component="'common.' . $d->inputType->tag_name" livewire:common. :in_data="$d" :wire:key="$d->id"
-                                        wire:sortable.handle />
+                                    @if ($d->input_select_data)
+                                        <livewire:is :component="'common.ExistingSelect'" livewire:common. :in_data="$d"
+                                            :wire:key="$d->id" wire:sortable.handle />
+                                    @else
+                                        <livewire:is :component="'common.' . $d->inputType->tag_name" livewire:common. :in_data="$d"
+                                            :wire:key="$d->id" wire:sortable.handle />
+                                    @endif
                                 </div>
                             @endforeach
 
