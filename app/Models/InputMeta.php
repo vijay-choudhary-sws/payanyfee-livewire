@@ -30,6 +30,6 @@ class InputMeta extends Model
 
     public function existingSelect()
     {
-        return $this->belongsTo(Inputselectdata::class,'input_select_data');
+        return $this->belongsTo(Categories::class,'input_select_data');
     }
 }

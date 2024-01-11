@@ -9,13 +9,11 @@ class ExistingSelect extends Component
 {
 
     public $in_data;
-    // public $existingdata;
 
     public function render()
     {
-        $existingdata = DB::table($this->in_data->existingSelect->table_name)->get();
-        // echo "<pre>";print_r($existingdata);die;
-// dd($existingdata);
+        $existingdata = $this->in_data->existingselect->posts;
+
         return view('livewire.common.existing-select',compact('existingdata'));
     }
 

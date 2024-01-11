@@ -11,9 +11,11 @@ use App\Http\Livewire\Admin\StudentRegistration\{StudentRegistration};
 use App\Http\Livewire\Admin\PaymentTypeConfrence\{PaymentTypeConfrence};
 use App\Http\Livewire\Admin\SelectData\{SelectData};
 use App\Http\Livewire\Admin\Gst\{Gst};
-use App\Http\Livewire\Admin\Course\{CourseList,CourseCreate,CourseEdit,CourseView};
+use App\Http\Livewire\Admin\Course\{CourseList, CourseCreate, CourseEdit, CourseView};
 use App\Http\Livewire\Admin\PaymentGetWay\{PaymentGetWay};
-use App\Http\Livewire\Admin\Paymentsetting\{PaymentList, PaymentPreview, PaymentsettingList,PaymentsettingCreate,PaymentsettingEdit,PaymentsettingView};
+use App\Http\Livewire\Admin\Paymentsetting\{PaymentList, PaymentPreview, PaymentsettingList, PaymentsettingCreate, PaymentsettingEdit, PaymentsettingView};
+use App\Http\Livewire\Admin\Post\{post};
+use App\Http\Livewire\Admin\Category\{Category};
 
 use Illuminate\Support\Facades\Auth;
 
@@ -38,75 +40,29 @@ Route::group([
     Route::get('dashboard', AdminController::class)->name('dashboard');
     Route::get('/', AdminController::class);
 
-     
-     //SelectData Routes
-   Route::group(['prefix' => 'courses'], function () {
-    Route::get('/', CourseList::class)->name('courses');
-    Route::get('/coursecreate', CourseCreate::class)->name('courses.coursecreate');
-    Route::get('/{course}/courseedit', CourseEdit::class)->name('courses.courseedit');
-    Route::get('/{id}/view', CourseView::class)->name('courses.view');
 
-
+    //SelectData Routes
+    Route::group(['prefix' => 'courses'], function () {
+        Route::get('/', CourseList::class)->name('courses');
+        Route::get('/coursecreate', CourseCreate::class)->name('courses.coursecreate');
+        Route::get('/{course}/courseedit', CourseEdit::class)->name('courses.courseedit');
+        Route::get('/{id}/view', CourseView::class)->name('courses.view');
     });
 
-    //Paymentypecourse Routes
-    Route::group(['prefix' => 'payment-type-courses'], function () {
-        Route::get('/', PaymentTypeCourse::class)->name('payment-type-courses');
+    Route::get('payment-type-courses', PaymentTypeCourse::class)->name('payment-type-courses');
+    Route::get('select-payment-course', SelectPaymentCourse::class)->name('select-payment-course');
+    Route::get('schools', School::class)->name('schools');
+    Route::get('school-programs', SchoolProgram::class)->name('school-programs');
+    Route::get('school-program-type', SchoolProgramType::class)->name('school-program-type');
+    Route::get('student-registrations', StudentRegistration::class)->name('student-registrations');
+    Route::get('payment-type-confrence', PaymentTypeConfrence::class)->name('payment-type-confrence');
+    Route::get('select-datas', SelectData::class)->name('select-datas');
+    Route::get('gsts', Gst::class)->name('gsts');
+    Route::get('paymentgetways', PaymentGetWay::class)->name('paymentgetways');
 
-    });
-    //selectpaymentcourse Routes
-    Route::group(['prefix' => 'select-payment-course'], function () {
-        Route::get('/', SelectPaymentCourse::class)->name('select-payment-course');
-
-    });
-    //school Routes
-    Route::group(['prefix' => 'schools'], function () {
-        Route::get('/', School::class)->name('schools');
-
-    });
     
-     //school Routes
-     Route::group(['prefix' => 'school-programs'], function () {
-        Route::get('/', SchoolProgram::class)->name('school-programs');
-
-    });
-
-   //school-program-type Routes
-   Route::group(['prefix' => 'school-program-type'], function () {
-    Route::get('/', SchoolProgramType::class)->name('school-program-type');
-
-    });
-
-    //studentregistration Routes
-   Route::group(['prefix' => 'student-registrations'], function () {
-    Route::get('/', StudentRegistration::class)->name('student-registrations');
-
-    });
-
-     //paymenttypeconfrences Routes
-   Route::group(['prefix' => 'payment-type-confrence'], function () {
-    Route::get('/', PaymentTypeConfrence::class)->name('payment-type-confrence');
-
-    });
-
-       //SelectData Routes
-   Route::group(['prefix' => 'select-datas'], function () {
-    Route::get('/', SelectData::class)->name('select-datas');
-
-    });
-    
-     //SelectData Routes
-   Route::group(['prefix' => 'gsts'], function () {
-    Route::get('/', Gst::class)->name('gsts');
-
-    });
-
-
-         //paymentgetway Routes
-   Route::group(['prefix' => 'paymentgetways'], function () {
-    Route::get('/', PaymentGetWay::class)->name('paymentgetways');
-
-    });
+    Route::get('post', Post::class)->name('posts');
+    Route::get('category', Category::class)->name('categorys');
 
     Route::group(['prefix' => 'paymentsettings'], function () {
         Route::get('/', PaymentsettingList::class)->name('paymentsettings');
@@ -116,8 +72,5 @@ Route::group([
         Route::get('/payment-preview/{payment_id}',  PaymentPreview::class)->name('paymentsettings.paymentpreview');
         Route::get('/payment-list/{paymentsetting}',  PaymentList::class)->name('paymentsettings.paymentList');
         // Route::get('/model-form', PaymentsettingModelView::class)->name('paymentsettings.addfield');
-      });
-
-
-
+    });
 });

@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Admin\Paymentsetting;
 
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use App\Models\{Paymentsetting, InputType, Field, InputMeta, PaymentsettingMeta, Inputselectdata, MetaOption, Paymentgetways, SettingWithGetways};
+use App\Models\{Paymentsetting, InputType, Field, InputMeta, PaymentsettingMeta, Inputselectdata, MetaOption, Paymentgetways, SettingWithGetways,Categories};
 use Illuminate\Http\Request;
 use \Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Validation\ValidationException;
@@ -106,7 +106,7 @@ class PaymentsettingEdit extends Component
        
         $this->Paymentsetting = $paymentsettings;
         $getwayId  = SettingWithGetways::where('paymentsetting_id', $this->id)->select('paymentgetway_id')->get();
-        $this->input_select_data = Inputselectdata::where('status',1)->get();
+        $this->input_select_data = Categories::get();
 
         $this->selectdata = '';
         
@@ -134,6 +134,7 @@ class PaymentsettingEdit extends Component
         $this->amountType = $this->amountType;
         $this->fixed_amount = 0;
     }
+
     public function isCustom()
     {
         if ($this->selectType == 1) {
@@ -188,6 +189,7 @@ class PaymentsettingEdit extends Component
 
     public function render()
     {
+       
         $getways = SettingWithGetways::with('getway')->where('paymentsetting_id', $this->id)->get();
         $paymentsetting_meta = PaymentsettingMeta::where('paymentsetting_id', $this->id)->get();
         $inputselectdatas = Inputselectdata::all();
@@ -215,7 +217,7 @@ class PaymentsettingEdit extends Component
 
     public function store()
     {
-
+       
         try {
             if ($this->optionvalue) {
                 $this->validate([
@@ -262,7 +264,7 @@ class PaymentsettingEdit extends Component
 
             $this->dispatch('toastSuccess', $this->heading . ' create successfully .');
             $this->close();
-            $this->reset('label', 'select_type', 'paymentsetting_id', 'input_type', 'input_name', 'placeholder', 'is_required');
+            $this->reset('label', 'select_type', 'paymentsetting_id', 'input_type', 'input_name', 'placeholder', 'is_required','is_custom','is_select','selectType','selectdata');
 
             $input_type_data = InputType::where('id',$this->input_type)->where('is_one_time',1)->first();
             if($input_type_data){
@@ -338,7 +340,8 @@ class PaymentsettingEdit extends Component
 
     public function inputDataBox()
     {
-        $this->input_data = InputMeta::with('existingSelect')->wherePaymentsetting_id($this->id)->orderBy('order_by', 'ASC')->get();
+        $this->input_data = InputMeta::with('existingSelect.posts')->wherePaymentsetting_id($this->id)->orderBy('order_by', 'ASC')->get();
+
     }
 
 

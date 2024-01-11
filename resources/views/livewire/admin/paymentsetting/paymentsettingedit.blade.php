@@ -94,7 +94,7 @@
                                                 wire:model="selectdata" >
                                                 <option value="" selected disabled>--select--</option>
                                                 @foreach ($input_select_data as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->selectTitle }}
+                                                    <option value="{{ $item->id }}">{{ $item->name }}
                                                     </option>
                                                 @endforeach
 
@@ -366,7 +366,7 @@
                             <div class="row" wire:sortable="updateInputOreder">
                                 
                                 @foreach ($input_data as $d)
-                               
+                              
                                     <div class="col-md-12" wire:sortable.item="{{ $d->id }}"
                                         wire:key="order-{{ $d->id }}">
                                         @if ($d->input_select_data)
