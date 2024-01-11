@@ -164,7 +164,7 @@
                                                                         value="{{ $name }}"
                                                                         placeholder="Enter your full name">
                                                                 </div>
-                                                                <div class="col-12">
+                                                                <div class="col-6">
                                                                     <label for="email"
                                                                         class="mb-2 float-left">Email</label>
                                                                     <input wire:model="email" type="email"
@@ -172,7 +172,7 @@
                                                                         value="{{ $email }}"
                                                                         placeholder="Enter your email">
                                                                 </div>
-                                                                <div class="col-12">
+                                                                <div class="col-6">
                                                                     <label for="phone"
                                                                         class="mb-2 float-left">phone</label>
                                                                     <input wire:model="phone" type="number"
@@ -183,18 +183,22 @@
                                                                 @foreach ($input_data as $d)
                                                                     @foreach ($payments->paymentMeta as $item)
                                                                         @if ($d->id == $item->meta_name)
-                                                                            @if ($d->input_select_data)
-                                                                                <livewire:is :component="'front.common.ExistingSelect'"
-                                                                                    livewire:common. :in_data="$d"
-                                                                                    wire:key="{{ $item->id }}"
-                                                                                    wire:model="formdata.{{ $item->id }}" />
-                                                                            @else
-                                                                                <livewire:is :component="'front.common.' .
-                                                                                    $d->inputType->tag_name"
-                                                                                    livewire:common. :in_data="$d"
-                                                                                    wire:key="{{ $item->id }}"
-                                                                                    wire:model="formdata.{{ $item->id }}" />
-                                                                            @endif
+                                                                            <div class="col-6">
+                                                                                @if ($d->input_select_data)
+                                                                                    <livewire:is :component="'front.common.ExistingSelect'"
+                                                                                        livewire:common.
+                                                                                        :in_data="$d"
+                                                                                        wire:key="{{ $item->id }}"
+                                                                                        wire:model="formdata.{{ $item->id }}" />
+                                                                                @else
+                                                                                    <livewire:is :component="'front.common.' .
+                                                                                        $d->inputType->tag_name"
+                                                                                        livewire:common.
+                                                                                        :in_data="$d"
+                                                                                        wire:key="{{ $item->id }}"
+                                                                                        wire:model="formdata.{{ $item->id }}" />
+                                                                                @endif
+                                                                            </div>
                                                                         @endif
                                                                     @endforeach
                                                                 @endforeach

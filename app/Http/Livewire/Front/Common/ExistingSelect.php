@@ -16,7 +16,7 @@ class ExistingSelect extends Component
     public $typeselect;
 
     public function mount(){
-        $this->existingdata = DB::table($this->in_data->existingSelect->table_name)->get();
+        $this->existingdata = $this->in_data->existingselect->posts;
     }
 
     public function render()

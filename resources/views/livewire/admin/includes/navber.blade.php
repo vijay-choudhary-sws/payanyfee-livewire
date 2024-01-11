@@ -28,29 +28,38 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:;" class="has-arrow">
+                                <a href="{{ route('admin.posts') }}" wire:navigate class=""
+                                    aria-expanded="true">
+                                    <div class="parent-icon"><i class="bx bx-category"></i>
+                                    </div>
+                                    <div class="menu-title">Posts</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('admin.categorys') }}" wire:navigate class=""
+                                    aria-expanded="true">
+                                    <div class="parent-icon"><i class="bx bx-category"></i>
+                                    </div>
+                                    <div class="menu-title">Category</div>
+                                </a>
+                            </li>
+                            <li>
+                                {{-- <a href="javascript:;" class="has-arrow">
                                     <div class="parent-icon"><i class="lni lni-graduation"></i>
                                     </div>
                                     <div class="menu-title">Master Menu Category</div>
-                                </a>
+                                </a> --}}
                                 <ul class="mm-collapse">
-                                    <li>
-                                        <a href="{{ route('admin.courses') }}" wire:navigate class=""
-                                            aria-expanded="true">
-                                            <div class="parent-icon"><i class="bx bx-category"></i>
-                                            </div>
-                                            <div class="menu-title">Courses</div>
-                                        </a>
-                                    </li>
-                                    <li>
+                                    
+                                    {{-- <li>
                                         <a href="{{ route('admin.payment-type-courses') }}" wire:navigate class=""
                                             aria-expanded="true">
                                             <div class="parent-icon"><i class="bx bx-category"></i>
                                             </div>
                                             <div class="menu-title">Payment Type Courses</div>
                                         </a>
-                                    </li>
-                                    <li>
+                                    </li> --}}
+                                    {{-- <li>
                                         <a href="{{ route('admin.select-payment-course') }}" wire:navigate
                                             class="" aria-expanded="true">
                                             <div class="parent-icon"><i class="bx bx-category"></i>
@@ -113,7 +122,7 @@
                                             </div>
                                             <div class="menu-title">Add Gst</div>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
                             </li>
                             <li>

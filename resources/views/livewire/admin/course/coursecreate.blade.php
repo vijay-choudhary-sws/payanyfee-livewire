@@ -15,20 +15,38 @@
              <div class="row">
                 <div class="col-md-6">
                    <div class="form-group">
-                      <label for="exampleFormControlInput1">Course Name</label>
-                      <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Course Name" wire:model.defer="course_name">
+                      <label for="exampleFormControlInput1">Title</label>
+                      <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Title" wire:model.defer="title">
                       @error('course_name') <span class="text-danger">{{ $message }}</span>@enderror
                    </div>
                 </div>
                 <div class="col-md-6">
                    <div class="form-group">
-                      <label for="exampleFormControlInput1">Course Fee</label>
-                      <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Enter Course Fee" wire:model.defer="course_fee">
-                      @error('course_fee') <span class="text-danger">{{ $message }}</span>@enderror
+                      <label for="exampleFormControlInput1">Category</label>
+                      <select wire:model.defer="category_id" id="status" class="form-control">
+                        <option value="">Select</option>
+                        @foreach ($category as $item)
+                        <option value="{{$item->id}}">{{$item->name}}</option>
+                            
+                        @endforeach
+                     </select>
+                      @error('category_id') <span class="text-danger">{{ $message }}</span>@enderror
+                   </div>
+                </div>
+                <div class="col-md-6">
+                   <div class="form-group">
+                     <label class="form-label" for="status">Status</label>
+                      <select wire:model.defer="status" id="status" class="form-control">
+                         <option value="">Select</option>
+                         <option value="1">Active</option>
+                         <option value="0">In-Active</option>
+                      </select>
+                      @error('status')<span class="text-danger"
+                         role="alert">{{ $message }}</span>@enderror
                    </div>
                 </div>
              </div>
-             <div class="row">
+             {{-- <div class="row">
                 <div class="col-md-6">
                    <div class="form-group my-3">
                       <label for="exampleFormControlInput1">Total Sets</label>
@@ -43,13 +61,13 @@
                       @error('available_sets') <span class="text-danger">{{ $message }}</span>@enderror
                    </div>
                 </div>
-             </div>
+             </div> --}}
              {{-- <hr class="frmHoriz"> --}}
-             <div class="projectHead border-0">
+             {{-- <div class="projectHead border-0">
                 <h4 class="mb-3 font-bold py-2 px-4" style="font-size: x-large;">About </h4>
              </div>
-             <div class="row">
-                <div class="col-md-6">
+             <div class="row"> --}}
+                {{-- <div class="col-md-6">
                    <div class="form-group my-3">
                       <label for="exampleFormControlTextarea1">Course Description</label>
                       <textarea class="form-control" id="exampleFormControlTextarea1" rows="1" wire:model.defer="description"></textarea>
@@ -67,7 +85,7 @@
                       @error('status')<span class="text-danger"
                          role="alert">{{ $message }}</span>@enderror
                    </div>
-                </div>
+                </div> --}}
                 <div class="row">
                    <div class="col-md-6">
                       <div class="my-4">

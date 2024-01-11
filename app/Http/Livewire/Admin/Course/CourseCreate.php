@@ -2,38 +2,37 @@
 
 namespace App\Http\Livewire\Admin\Course;
 
+use App\Models\Categories;
+use App\Models\Category;
 use Livewire\Attributes\Validate; 
 use Livewire\Component;
 use App\Models\Course;
+use App\Models\Post;
+use App\Models\Posts;
 
 class CourseCreate extends Component
 {
     #[Validate('required')] 
-    public $course_name = '';
+    public $title = '';
  
     #[Validate('required')] 
-    public $course_fee = '';
-
-    #[Validate('required')] 
-    public $total_sets = '';
-
-    #[Validate('required')] 
-    public $available_sets = '';
-
-    #[Validate('required')] 
-    public $description = '';
+    public $category_id = '';
 
     #[Validate('required')] 
     public $status = '';
  
-    public $heading = 'Course';
+    public $heading = 'Posts',$category;
+
+    public function mount(){
+        $this->category = Categories::all();
+    }
 
     public function save()
     {
         $this->validate(); 
  
-        Course::create(
-            $this->only(['course_name', 'course_fee','total_sets','available_sets','description','status'])
+        Posts::create(
+           ['title'=>$this->title, 'category_id'=>$this->category_id, 'status'=>$this->status]
         );
 
         $this->dispatch('toastSuccess',$this->heading.' successfully saved.');
