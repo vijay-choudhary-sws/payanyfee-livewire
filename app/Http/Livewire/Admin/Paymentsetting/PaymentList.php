@@ -81,4 +81,5 @@ class PaymentList extends Component
         // echo "<pre>";print_r($payments);die;
         return view('livewire.admin.paymentsetting.payment-list', compact('payments'));
     }
+
 }

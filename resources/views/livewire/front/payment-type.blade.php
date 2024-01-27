@@ -2,7 +2,9 @@
    <div class="text-center py-4  bg-dark border-bottom mb-3">
       <div class="container">
          <div class='logo'>
+            <a href="{{ route('front.payment-view') }}">
             <img src="{{ asset('assets/images/payanyfee_logo.png') }}" class="img-fluid" style="height:30px">
+            </a>
          </div>
       </div>
    </div>

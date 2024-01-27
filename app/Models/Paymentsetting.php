@@ -11,9 +11,9 @@ class Paymentsetting extends Model
     use HasFactory,Sluggable;
 
     protected $fillable = [
-        'title','slug','email','cc_email','bcc_email','status','amount_type','fixed_amount'
+        'title','slug','status','amount_type','fixed_amount'
     ];
-    
+   
     public function sluggable(): array
     {
         return [
@@ -23,8 +23,9 @@ class Paymentsetting extends Model
         ];
     }
 
-    public function getway(){
-        
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class);
     }
 
 }

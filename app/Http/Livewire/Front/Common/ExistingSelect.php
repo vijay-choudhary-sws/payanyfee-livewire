@@ -16,6 +16,7 @@ class ExistingSelect extends Component
     public $typeselect;
 
     public function mount(){
+    
         $this->existingdata = $this->in_data->existingselect->posts;
     }
 
@@ -23,4 +24,19 @@ class ExistingSelect extends Component
     {
         return view('livewire.front.common.existing-select');
     }
+
+    public function amountchange(){
+        
+        $this->dispatch('amountchangefront',id: $this->typeselect); 
+    }
+
+    					
+    public function multipledataselect()
+    {
+        $this->dispatch('updatedSelectdata',id:$this->typeselect); 
+       
+    }
+
+    
+    
 }

@@ -18,6 +18,8 @@ class Select extends Component
     {
         return view('\livewire.front.common.select');
     }
+
+  
   
 }
 

@@ -8,7 +8,7 @@ class Categories extends Model
 {
     protected $table = 'categories';
     protected $fillable = [
-        'name','status'
+        'name','dependency','status'
     ];
 
     public function posts()

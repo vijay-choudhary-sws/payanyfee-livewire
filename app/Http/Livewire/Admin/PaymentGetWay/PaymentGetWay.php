@@ -54,6 +54,9 @@ class PaymentGetWay extends Component
         $this->paymentMode = PaymentMode::all();
         $this->paymodeedit = false;
         $this->id = '';
+        $amount = [];
+        $percent = [];
+        $modestatus = [];
       
     }
     public function applyFilter()
@@ -86,6 +89,7 @@ class PaymentGetWay extends Component
     {
         $this->reset('name', 'selectpaymentcountry', 'photo', 'status', 'pgwId');
         $this->gatewayCreat = true;
+        $this->paymodeedit = false;
         $this->openModal();
     }
 

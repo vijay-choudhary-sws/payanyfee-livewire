@@ -2,7 +2,9 @@
     <div class="text-center py-4  bg-dark border-bottom mb-3">
         <div class="container">
             <div class='logo'>
+                <a href="{{ route('front.payment-view') }}">
                 <img src="{{ asset('assets/images/payanyfee_logo.png') }}" class="img-fluid" style="height:30px">
+                </a>
             </div>
         </div>
     </div>
@@ -46,6 +48,9 @@
                                         @endphp
                                         @foreach ($input_data as $d)
                                             @foreach ($payments->paymentMeta as $item)
+                                            {{-- @php
+                                                echo"<pre>";print_r($item->toArray());die;
+                                            @endphp --}}
                                                 @if ($d->id == $item->meta_name)
                                                     @if (count($item->paymentMetaMultiple) > 0)
                                                         <tr>
@@ -53,9 +58,10 @@
                                                             <td>{{ $d->label }}</td>
                                                             <td>
                                                                 <ul class="list-unstyled">
-                                                                    @foreach ($item->paymentMetaMultiple as $val)
-                                                                        <li>{{ $val->meta_value }}</li>
-                                                                    @endforeach
+                                                                    {{-- @foreach ($item->paymentMetaMultiple as $val) --}}
+                                                                    
+                                                                        <li>{{ $item->freeho->title }}</li>
+                                                                    {{-- @endforeach --}}
                                                                 </ul>
                                                             </td>
                                                         </tr>
@@ -66,7 +72,17 @@
                                                             <td>{{ $item->meta_value }}</td>
                                                         </tr>
                                                     @endif
+                                                   
                                                 @endif
+                                                @if($d->is_multiple_required ==1)
+                                                    @foreach ($item->paymentMetaMultiple as $key => $val)
+                                                    <tr>
+                                                        <th scope="row">{{ $i++ }}</th>
+                                                        <td>{{ $d->multioption[$key]->multioptionlabel }}</td>
+                                                        <td>{{ $val->post->title ?? $val->meta_value}}</td>
+                                                    </tr>
+                                                    @endforeach
+                                                    @endif
                                             @endforeach
                                         @endforeach
                                         <tr>
@@ -181,6 +197,7 @@
                                                                         placeholder="Enter your number">
                                                                 </div>
                                                                 @foreach ($input_data as $d)
+                                                              
                                                                     @foreach ($payments->paymentMeta as $item)
                                                                         @if ($d->id == $item->meta_name)
                                                                             <div class="col-6">
@@ -190,6 +207,32 @@
                                                                                         :in_data="$d"
                                                                                         wire:key="{{ $item->id }}"
                                                                                         wire:model="formdata.{{ $item->id }}" />
+                                                                                        @if ($d->is_multiple_required == 1)
+                                                                                        @foreach ($mutiioption as $item)
+                                                                                        
+                                                                                       @foreach ($item->multioption as $key => $option)
+                                                                                      
+                                                                                       <div class="col-12 mb-2">
+                                                                                           <label for="mul" class="block text-gray-700 font-bold mb-2">{{$option->multioptionlabel}}</label>
+                                                                                     
+                                                                                           <select class="form-control single-select" wire:model="muloptions.{{ $item->id }}.{{ $key }}" @if (!$loop->last)
+                                                                                              wire:change="mi('{{ $item->id }}','{{ $key }}')"
+                                                                                           @endif  >
+                                                                                              <option value="" selected>--select--</option>
+                                                                                              @if (isset($muloptionss[$key]))
+                                                                                                   @foreach ($muloptionss[$key] as $mulOption)
+                                                                                                       <option value="{{ $mulOption->id  }}">{{ $mulOption->title  }}</option>
+                                                                                                   @endforeach
+                                                                                              @endif
+                                                                                               </select>
+                                                                                               @error('muloptions.' . $key)
+                                                                                                   <span class="text-danger">{{ $message }}</span>
+                                                                                               @enderror
+                                                                                       </div>
+                                                                                       
+                                                                                   @endforeach
+                                                                                        @endforeach
+                                                                                        @endif
                                                                                 @else
                                                                                     <livewire:is :component="'front.common.' .
                                                                                         $d->inputType->tag_name"

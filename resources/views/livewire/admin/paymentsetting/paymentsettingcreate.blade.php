@@ -79,18 +79,16 @@
                   
                  </div>
                </div>
-               <div class="col-md-6">
+               {{-- <div class="col-md-6">
                   <div class="frmInputGroup">
-                    {{-- <div class="bootstrap-tagsinput"> --}}
                      <label for="form-label">Email</label>
                      <input type="email"  class="form-control" id="exampleFormControlInput1"  placeholder="Enter Email" wire:model.defer="email">
                      @error('email') <span class="text-danger">{{ $message }}</span>@enderror
-                  {{-- </div> --}}
                </div>
-              </div>
+              </div> --}}
            </div>
             <div class="row">
-               <div class="col-md-6">
+               {{-- <div class="col-md-6">
                   <div class="form-group my-3">
                      <label for="exampleFormControlInput1">CC Email</label>
                      <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter CC Email" wire:model.defer="cc_email">
@@ -103,7 +101,7 @@
                      <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="Enter BCC Email" wire:model.defer="bcc_email">
                      @error('bcc_email') <span class="text-danger">{{ $message }}</span>@enderror
                   </div>
-               </div>
+               </div> --}}
 
                @foreach($Fields as $field)
                   @if($field->select_type == 'select')

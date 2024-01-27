@@ -19,5 +19,8 @@ class PaymentMeta extends Model
     {
         return $this->hasMany(PaymentMetaMultiple::class);
     }
+    public function freeho(){
+        return $this->belongsTo(Posts::class,'meta_value');
+     }
 
 }
