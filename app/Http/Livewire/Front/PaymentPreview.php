@@ -20,6 +20,7 @@ class PaymentPreview extends Component
     protected $listeners = ['store', 'amountchangefront', 'updatedSelectdata'];
     public function mount($payment_id)
     {
+       
         $this->payment_id = base64_decode($payment_id);
         // $this->payments = Payment::with('paymentMeta.paymentMetaMultiple.post')->find($this->payment_id);
         $this->payments = Payment::with('paymentMeta.freeho')->find($this->payment_id);
@@ -76,11 +77,11 @@ class PaymentPreview extends Component
             foreach($value->paymentMetaMultiple as $keys => $thd){
                 if($keys == 0){
                 $post = Posts::find($value->meta_value);
-                $this->muloptionss[$keys] = Posts::where('category_id', $post->dependency_category_id)->get();
+                $this->muloptionss[$keys] = Posts::where('category_id', @$post->dependency_category_id)->get();
                 // echo"<pre>";print_r($this->muloptionss);die;
             }else{
                 $post = Posts::find($thd->meta_value);
-                $this->muloptionss[$keys] = Posts::where('category_id', $post->dependency_category_id)->get();
+                $this->muloptionss[$keys] = Posts::where('category_id', @$post->dependency_category_id)->get();
             }
                
                 // echo"<pre>";print_r($value->toArray());die;
@@ -92,15 +93,18 @@ class PaymentPreview extends Component
         $this->mutiioption = InputMeta::with('multioption')->where('is_multiple_required', 1)->get();
       
 
-        foreach ($this->mutiioption as $item) {
-            foreach ($item->multioption as $key => $option) {
-               
-                $this->muloptions[$item->id][$key] = '';
-              
-            }
-        }
 
-     
+
+        foreach ($this->payments->paymentMeta as $item){
+            foreach($item->paymentMetaMultiple as $key=>$val){
+
+                $this->muloptions[$item->meta_name][$key] = $val->meta_value ?? '';
+            
+            }
+          
+
+        }
+        
     }
 
     public function updatedSelectdata($id)
@@ -152,7 +156,9 @@ class PaymentPreview extends Component
             }
 
      
-        $meta_multiple = PaymentMetaMultiple::where('payment_meta_id', $payment->id)->get();
+        $meta_multiple = PaymentMetaMultiple::get();
+        // echo"<pre>";print_r($meta_multiple->toArray());die;
+        
                 foreach ($meta_multiple as $val) {
                     PaymentMetaMultiple::destroy($val->id);
 

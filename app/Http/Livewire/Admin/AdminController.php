@@ -10,11 +10,11 @@ use Illuminate\Support\Number;
 
 class AdminController extends Component
 {
-    public $paymentsetting, $payment, $todaysAmount, $paymentgetway, $groupbyamount, $datetime, $chartData, $gaywaychartData, $paymentsettingcg, $getwaytodaysAmount,$amountsum=[],$paymentgetways,$amountgetsum=[];
+    public $paymentsetting, $payment, $todaysAmount, $paymentgetway, $groupbyamount, $datetime, $chartData, $gaywaychartData, $paymentsettingcg, $getwaytodaysAmount, $amountsum = [], $paymentgetways, $amountgetsum = [], $date, $uri, $chartDatas, $paymentGetwayId, $totalAmount,$dataArray=[];
 
     public function mount()
     {
-       
+
         $paymentsetting = Paymentsetting::count();
         $this->paymentsetting = Number::forHumans($paymentsetting);
 
@@ -35,19 +35,16 @@ class AdminController extends Component
             $this->amountsum[$value->id] = Payment::where('paymentsetting_id', $value->id)
                 ->whereDate('created_at', Carbon::today())
                 ->sum('amount');
-                
         }
-        
+
         $this->paymentgetways = Paymentgetways::get();
         foreach ($this->paymentgetways as $getvslue) {
             $this->amountgetsum[$getvslue->id] = Payment::where('paymentgetway_id', $getvslue->id)
                 ->whereDate('created_at', Carbon::today())
                 ->sum('amount');
-
-                
         }
-        
-       
+
+
         $this->chartData = $this->getCollection();
         $this->gaywaychartData  = $this->getwayCollection();
     }
@@ -57,35 +54,57 @@ class AdminController extends Component
     {
         $data = Payment::with('paymentsetting')
             ->groupBy('paymentsetting_id')
-            ->selectRaw('paymentsetting_id, sum(total_amount) as total_amount')
+            ->selectRaw('paymentsetting_id, sum(total_amount) as total_amount')->whereNotNull('paymentsetting_id')
             ->get();
         // echo"<pre>";print_r($data->toArray());die;
         return $data;
     }
 
-    public function getwayCollection()
+    public function grafiter()
     {
-        $data = Payment::with('paymentGetway')
+        $this->chartData = Payment::with('paymentGetway')
+            ->whereNotNull('paymentgetway_id')
+            ->whereDate('created_at', '=', date('Y-m-d', strtotime($this->date)))
             ->groupBy('paymentgetway_id')
             ->selectRaw('paymentgetway_id, sum(total_amount) as total_amount')
             ->get();
 
-            // echo"<pre>";print_r($data->toArray());die;
+            // echo"<pre>";print_r($paymentsData->toArray());die;
+    
+        // $dataArray = [];
+    
+        // foreach ($paymentsData as  $payment) {
+        //     $this->dataArray[] = [$payment->paymentGetway->name,$payment->total_amount];
+        //     //  echo"<pre>";print_r($this->dataArray);die;
+        // }
+   
+      
+        // return $dataArray;
+    }
+    
+
+
+
+    public function getwayCollection()
+    {
+        $data = Payment::with('paymentGetway')
+            ->whereNotNull('paymentgetway_id')
+            ->groupBy('paymentgetway_id')
+            ->selectRaw('paymentgetway_id, sum(total_amount) as total_amount')
+            ->get();
+
+        // echo "<pre>"; print_r($data->toArray()); die;
+
         return $data;
     }
+
 
 
     public function render()
     {
 
+       
 
-
-
-        // $this->todaysAmountPayment = Payment::with('paymentsetting')
-        // ->whereDate('created_at', Carbon::today())
-        // ->get();
-
-
-        return view('livewire.admin.dashboard');
+        return view('livewire.admin.dashboard' );
     }
 }

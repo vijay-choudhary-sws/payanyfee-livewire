@@ -110,7 +110,7 @@
         </div>
 
 
-        - <div class="card radius-10">
+        <div class="card radius-10">
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <div>
@@ -120,7 +120,7 @@
 
             </div>
             <div class="card-body">
-              
+
                 <div class="table-responsive">
                     <table class="table mb-0">
                         <thead class="table-light">
@@ -154,7 +154,67 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-12 col-6">
+                <label for="date">Date:</label>
+                <input type="text" id="datepicker" wire:model="date" wire:change="grafiter" autocomplete="off">
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="totalGateway" class="chartjs-render-monitor"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <div id="totalLink" class="chartjs-render-monitor"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+            
+            <pre>   
+                    {{print_r($chartData->toArray())}}
+            </pre>
+           
+ 
+            <script>
+                    google.charts.load("current", {
+                        "packages": ["corechart"]
+                    });
+                    google.charts.setOnLoadCallback(totalLink);
+                    google.charts.setOnLoadCallback(todayLink);
+                    google.charts.setOnLoadCallback(totalgatewaygraph);
+                    google.charts.setOnLoadCallback(perdaygatewaygraph);
+        
+                    function totalLink() {
+        
+                        var data = google.visualization.arrayToDataTable([
+                            ["Payment Gateway", "Total Payment"], ['vijay',12
+                        ],['atul',5]
+                        ]);
+                        
+        
+                        var options = {
+                            title: "Total",
+                            is3D: true,
+                        };
+        
+                        var chart = new google.visualization.PieChart(document.getElementById("totalLink"));
+                        chart.draw(data, options);
+                    }
+        
 
+                   
+                </script>
+        </div>
+        
 
         <div class="row">
             <div class="col-6 col-lg-4 col-xl-4">
@@ -204,10 +264,9 @@
 
         </div>
 
+    
 
         <script>
-          
-
             window.addEventListener('DOMContentLoaded', (event) => {
         renderChart("chart", @json($chartData));
         renderChart("getchart", @json($gaywaychartData));
@@ -239,3 +298,20 @@
         });
     }
         </script>
+
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+        <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+        <script>
+            var picker = new Pikaday({
+        field: document.getElementById('datepicker'),
+        onSelect: function(date) {
+            @this.set('date', date.toLocaleDateString());
+            @this.grafiter();
+        }
+    });
+
+        </script>
+
+    </div>
+</div>
+</div>

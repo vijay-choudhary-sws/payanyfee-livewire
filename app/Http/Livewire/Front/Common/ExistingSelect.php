@@ -1,7 +1,7 @@
 <?php
 
 namespace App\http\Livewire\Front\Common;
-
+use App\Models\{Payment};
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\Modelable;
@@ -9,7 +9,7 @@ use Livewire\Attributes\Modelable;
 class ExistingSelect extends Component
 {
     public $in_data;
-    public $is_front,$existingdata;
+    public $is_front,$existingdata,$payments;
 
 
     #[Modelable] 
@@ -17,7 +17,9 @@ class ExistingSelect extends Component
 
     public function mount(){
     
+       
         $this->existingdata = $this->in_data->existingselect->posts;
+        
     }
 
     public function render()

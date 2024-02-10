@@ -3,7 +3,7 @@
         <div class="container">
             <div class='logo'>
                 <a href="{{ route('front.payment-view') }}">
-                <img src="{{ asset('assets/images/payanyfee_logo.png') }}" class="img-fluid" style="height:30px">
+                    <img src="{{ asset('assets/images/payanyfee_logo.png') }}" class="img-fluid" style="height:30px">
                 </a>
             </div>
         </div>
@@ -44,27 +44,47 @@
                                         </tr>
 
                                         @php
-                                            $i = 4;
+                                        $i = 4;
                                         @endphp
                                         @foreach ($input_data as $d)
-                                            @foreach ($payments->paymentMeta as $item)
-                                            {{-- @php
-                                                echo"<pre>";print_r($item->toArray());die;
+                                        @foreach ($payments->paymentMeta as $item)
+                                        {{-- @php
+                                        echo"
+                                        <pre>";print_r($item->toArray());die;
                                             @endphp --}}
                                                 @if ($d->id == $item->meta_name)
+                                              
+                                                {{-- @if($d->is_multiple_required == 1){
+                                                    {{'dg'}}
+                                                } --}}
+                                             
                                                     @if (count($item->paymentMetaMultiple) > 0)
+                                                     @if($d->is_multiple_required == 1)
+                                                     <tr>
+                                                        <th scope="row">{{ $i++ }}</th>
+                                                        <td>{{ $d->label }}</td>
+                                                        <td>
+                                                           {{$item->freeho->title}}
+                                                        </td>
+                                                    </tr>
+                                                     @else
+
                                                         <tr>
                                                             <th scope="row">{{ $i++ }}</th>
                                                             <td>{{ $d->label }}</td>
                                                             <td>
-                                                                <ul class="list-unstyled">
-                                                                    {{-- @foreach ($item->paymentMetaMultiple as $val) --}}
+                                                                <ul class="list-unstyled">              
+                                                                
+                                                                    @foreach ($item->paymentMetaMultiple as $val)
+                                                                   
                                                                     
-                                                                        <li>{{ $item->freeho->title }}</li>
-                                                                    {{-- @endforeach --}}
+                                                                        <li>{{ $val->meta_value }}</li>
+                                                                    @endforeach
+                                                               
                                                                 </ul>
                                                             </td>
                                                         </tr>
+                                                        @endif
                                                     @else
                                                         <tr>
                                                             <th scope="row">{{ $i++ }}</th>
