@@ -24,7 +24,7 @@ class Category extends Component
     public $categoryId;
     public $School;
     public $courses;
-    public $universities;
+    public $universities,$dependency;
 
     public function mount()
     {
@@ -74,16 +74,18 @@ class Category extends Component
         $this->validate([
             'name' => 'required',
             'status' => 'required',
+
         ]);
 
         Categories::create([
             'name' => $this->name,
+            'dependency'=>$this->dependency,
             'status' => $this->status,
         ]);
         $this->dispatch('toastSuccess', $this->heading . ' create successfully .');
 
         $this->closeModal();
-        $this->reset('name', 'status');
+        $this->reset('name','dependency','status');
     }
 
 
@@ -92,6 +94,7 @@ class Category extends Component
         $category = Categories::findOrFail($id);
         $this->categoryId = $id;
         $this->name = $category->name;
+        $this->dependency = $category->dependency;
         $this->status = $category->status;
         $this->openModal();
     }
@@ -107,12 +110,14 @@ class Category extends Component
             $categories = Categories::findOrFail($this->categoryId);
             $categories->update([
                 'name' => $this->name,
+                'dependency'=>$this->dependency,
                 'status' => $this->status,
+        
             ]);
 
             $this->dispatch('toastSuccess', $this->heading . ' updated successfully.');
             $this->closeModal();
-            $this->reset('name', 'status', 'categoryId');
+            $this->reset('name','dependency','status','categoryId');
         }
     }
 
@@ -133,13 +138,16 @@ class Category extends Component
     public function render()
     {
 
-        $categorie = Categories::with('school', 'coursename')->orderby($this->orderColumn, $this->sortOrder)
-            ->select('id', 'name', 'status');
+        $categorie = Categories::orderby($this->orderColumn, $this->sortOrder)
+            ->select('id', 'name','status','dependency');
         $searchQuery = '%' . $this->searchTerm . '%';
 
         if (!empty($this->searchTerm)) {
             $categorie->orWhere('name', 'like', $searchQuery);
             $categorie->orWhere('status', 'like', $searchQuery);
+            $categorie->orWhere('dependency', 'like', $searchQuery);
+          
+            
         }
         $categories = $categorie->paginate(10);
 
@@ -155,7 +163,7 @@ class Category extends Component
 
         $this->dispatch('toastSuccess', $this->heading . ' successfully deleted.');
     }
-
+    
     public function status_update($categoryId)
     {
         $category = Categories::find($categoryId);
@@ -171,4 +179,23 @@ class Category extends Component
         }
         return $this->redirect(route('admin.categorys'), navigate: true);
     }
+
+    public function dependency_update($categoryId)
+    {
+        $category = Categories::find($categoryId);
+
+        if ($category->dependency == 0) {
+            $category->dependency = 1;
+            $category->save();
+            $this->dispatch('toastSuccess', 'dependency successfully deleted.');
+        } else {
+            $category->dependency = 0;
+            $category->save();
+            session()->flash('success', 'dependency deactivated successfully.');
+        }
+        return $this->redirect(route('admin.categorys'), navigate: true);
+    }
+
+
+ 
 }

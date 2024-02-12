@@ -64,15 +64,15 @@ class PaymentsettingList extends Component
     {
         $PaymentsettingAll = Paymentsetting::all();
         $Paymentsetting = Paymentsetting::orderby($this->orderColumn,$this->sortOrder)
-        ->select('id','title','slug','cc_email','bcc_email','status');
+        ->select('id','title','slug','status');
         // $searchQuery = '%'.$this->searchTerm.'%';
         $search = '%'.$this->search.'%';
         $status = '%'.$this->status.'%';
         if(!empty($this->search)){
             $Paymentsetting->orWhere('title','like',$search);
             $Paymentsetting->orWhere('slug','like',$search);
-            $Paymentsetting->orWhere('cc_email','like',$search);
-            $Paymentsetting->orWhere('bcc_email','like',$search);
+            // $Paymentsetting->orWhere('cc_email','like',$search);
+            // $Paymentsetting->orWhere('bcc_email','like',$search);
             // $Paymentsetting->orWhere('status','like',$search);
        }
           if (!empty($this->selectedtitle)) {

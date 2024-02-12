@@ -168,11 +168,12 @@
                                 @if ($paymodeedit)
                                     <h2 class="text-2xl font-bold mb-4">Payment Mode</h2>
                                     <form wire:submit.prevent="editPaymentMode">
-                                    @else
-                                        <h2 class="text-2xl font-bold mb-4">{{ $pgwId ? 'Edit' : 'Create' }}
-                                            {{ $heading }}</h2>
-                                        <form wire:submit.prevent="{{ $pgwId ? 'update' : 'store' }}">
+                                @else
+                                    <h2 class="text-2xl font-bold mb-4">{{ $pgwId ? 'Edit' : 'Create' }}
+                                        {{ $heading }}</h2>
+                                    <form wire:submit.prevent="{{ $pgwId ? 'update' : 'store' }}">
                                 @endif
+                                
                                 <div class="row">
                                     @if ($paymodeedit == false)
                                         <div class="col-md-6 mb-4">

@@ -48,6 +48,8 @@
                                     </th>
                                     <th class="sort" wire:click="columnSortOrder('title')">Title
                                         {!! $sortLink !!}</th>
+                                        <th class="sort" wire:click="columnSortOrder('amount')">Amount
+                                            {!! $sortLink !!}</th>
                                     <th class="sort" wire:click="columnSortOrder('category_id')">Category
                                         {!! $sortLink !!}</th>
                                     <th class="sort" wire:click="columnSortOrder('status')">Status
@@ -62,6 +64,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $post->title }} </td>
+                                            <td>{{$post->amount}}</td>
                                             <td>{{ $post->category->name }} </td>
                                             <td>
                                                 <button style="font-size: 12px;"
@@ -124,6 +127,15 @@
                                                 <span class="text-danger">{{ $message }}</span>
                                             @enderror
                                         </div>
+                                        <div class="col-md-12 my-2">
+                                            <label for="title"
+                                                class="form-control-label">Amount</label>
+                                            <input type="text" wire:model="amount" id="amount" class="form-control"
+                                                placeholder="Enter Amount">
+                                            @error('amount')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
                                         <div class="col-md-6">
                                             <label for="category_id"
                                                 class="form-control-label">Category</label>
@@ -140,9 +152,26 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-6">
+                                            <label for="category_id"
+                                                class="form-control-label">Dependency Category Id</label>
+                                            <select class="form-control single-select" id="dependency_category_id" wire:model="dependency_category_id">
+                                                <option value="">-- Select --</option>
+                                                @foreach ($dependency_category as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->name }}
+                                                    </option>
+                                                @endforeach
+
+                                            </select>
+                                            @error('category_id')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        
+                                        <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="form-control-label" for="status">Status</label>
                                                 <select wire:model="status" id="status" class="form-control">
+                                                    <option value="">Select</option>
                                                     <option value="1">Active</option>
                                                     <option value="0">In-Active</option>
                                                 </select>

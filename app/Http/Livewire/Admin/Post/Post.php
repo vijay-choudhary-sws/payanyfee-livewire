@@ -17,12 +17,13 @@ class Post extends Component
     public $title;
 
     public $category_id;
+    public $amount;
     public $status;
     public $isOpen = 0;
     public $isedit = 0;
     public $PostId;
 
-    public $universities;
+    public $universities,$dependency_category,$dependency_category_id;
 
     public function mount()
     {
@@ -30,6 +31,8 @@ class Post extends Component
         $this->title = '';
         $this->category_id = '';
         $this->status = '1';
+        $this->dependency_category = Categories::get();
+        
     }
 
     public function clearFilters()
@@ -54,7 +57,7 @@ class Post extends Component
 
     public function create()
     {
-        $this->reset('title', 'PostId');
+        $this->reset('title','amount','category_id','status','PostId');
         $this->openModal();
     }
     public function openModal()
@@ -72,19 +75,23 @@ class Post extends Component
     {
         $this->validate([
             'title' => 'required',
+            'amount'=>'required',
             'category_id' => 'required',
             'status' => 'required',
         ]);
         
         Posts::create([
             'title' => $this->title,
+            'amount'=> $this->amount,
             'category_id' => $this->category_id,
+            'dependency_category_id' => $this->dependency_category_id,
+          
             'status' => $this->status,
         ]);
         $this->dispatch('toastSuccess', $this->heading . ' create successfully .');
 
         $this->closeModal();
-        $this->reset('title', 'category_id', 'status');
+        $this->reset('title','amount','category_id', 'status');
     }
 
 
@@ -93,7 +100,10 @@ class Post extends Component
         $post = Posts::findOrFail($id);
         $this->PostId = $id;
         $this->title = $post->title;
+        $this->amount =$post->amount;
         $this->category_id = $post->category_id;
+        $this->dependency_category_id = $post->dependency_category_id;
+
         $this->status = $post->status;
         $this->openModal();
     }
@@ -102,6 +112,7 @@ class Post extends Component
     {
         $this->validate([
             'title' => 'required',
+            'amount'=>'required',
             'category_id' => 'required',
             'status' => 'required',
         ]);
@@ -110,13 +121,15 @@ class Post extends Component
             $post = Posts::findOrFail($this->PostId);
             $post->update([
                 'title' => $this->title,
+                'amount'=>$this->amount,
                 'category_id' => $this->category_id,
+                'dependency_category_id' => $this->dependency_category_id,
                 'status' => $this->status,
             ]);
 
             $this->dispatch('toastSuccess', $this->heading . ' updated successfully.');
             $this->closeModal();
-            $this->reset('title', 'category_id', 'status', 'PostId');
+            $this->reset('title','amount', 'category_id', 'status', 'PostId');
         }
     }
 
@@ -138,11 +151,12 @@ class Post extends Component
     {
 
         $post = Posts::with('category')->orderby($this->orderColumn, $this->sortOrder)
-            ->select('id', 'title', 'category_id', 'status');
+            ->select('id', 'title','amount','category_id', 'status');
         $searchQuery = '%' . $this->searchTerm . '%';
 
         if (!empty($this->searchTerm)) {
             $post->orWhere('title', 'like', $searchQuery);
+            $post->orWhere('amount', 'like', $searchQuery);
             $post->orWhere('category_id', 'like', $searchQuery);
             $post->orWhere('status', 'like', $searchQuery);
         }

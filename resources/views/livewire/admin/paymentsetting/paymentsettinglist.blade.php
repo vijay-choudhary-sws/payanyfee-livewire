@@ -83,12 +83,7 @@
                                     </th>
                                     <th class="sort" wire:click="columnSortOrder('slug')">Slug {!! $sortLink !!}
                                     </th>
-                                    <th class="sort" wire:click="columnSortOrder('cc_email')">CC Email
-                                        {!! $sortLink !!}
-                                    </th>
-                                    <th class="sort" wire:click="columnSortOrder('bcc_email')">BCC Email
-                                        {!! $sortLink !!}
-                                    </th>
+
                                     <th class="sort" wire:click="columnSortOrder('status')">Status
                                         {!! $sortLink !!}
                                     </th>
@@ -103,8 +98,7 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $Paymentsetting->title }} </td>
                                             <td>{{ $Paymentsetting->slug }} </td>
-                                            <td>{{ $Paymentsetting->cc_email }} </td>
-                                            <td>{{ $Paymentsetting->bcc_email }} </td>
+                
                                             <td>
                                                 <button style="font-size: 12px;"
                                                     wire:click="status_update({{ $Paymentsetting->id }})"

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--favicon-->
     <link rel="icon" href="{{ asset('assets/images/favicon-32x32.png') }}" type="image/png">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!--plugins-->
     <link href="{{ asset('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/plugins/simplebar/css/simplebar.css') }}" rel="stylesheet">
@@ -24,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/header-colors.css') }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+    
     <title>{{ env('APP_NAME') }}</title>
     @livewireStyles
 
@@ -56,28 +58,29 @@
 
 
         {{ $slot }}
+        
 
         <!--start overlay-->
         @include('livewire.admin.includes.footer')
+        
     </div>
 
     <!--end wrapper-->
-
-
-
+  
     @livewireScripts
-    
-    <script src="https://unpkg.com/@nextapps-be/livewire-sortablejs@0.4.0/dist/livewire-sortable.js"></script>
-    
+
 
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    
+
     <!--plugins-->
     <script src="{{ asset('assets/js/jquery.min.js') }}"></script>
+    
     <script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
     <!--app JS-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
     <script src="{{ asset('assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js') }}"></script>
@@ -88,13 +91,16 @@
     <!--Morris JavaScript -->
     <script src="{{ asset('assets/plugins/raphael/raphael-min.js') }}"></script>
     <script src="{{ asset('assets/plugins/morris/js/morris.js') }}"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 
     {{-- <script src="{{ asset('assets/js/index2.js') }}"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-
+    
+    
     <script>
         let isToastActive = false;
     
@@ -133,7 +139,7 @@
         });
     </script>
 
-   
+
 
 </body>
 

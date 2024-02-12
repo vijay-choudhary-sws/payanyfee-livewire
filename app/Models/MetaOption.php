@@ -13,7 +13,7 @@ class MetaOption extends Model
 
     protected $table = 'meta_options';
     protected $fillable = [
-       'option_value','input_meta_id','label','is_default','option_amount'
+       'option_value','input_meta_id','label','is_default','option_amount','multioptionname','multioptionlabel'
     ];
 
     public function inputMeta(): BelongsTo

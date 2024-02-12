@@ -13,7 +13,7 @@ class InputMeta extends Model
 
     protected $table = 'input_metas';
     protected $fillable = [
-        'label','select_type','paymentsetting_id','input_type_id','input_name','placeholder','is_required','order_by','is_custom','input_select_data'
+        'label','select_type','paymentsetting_id','input_type_id','input_name','placeholder','is_required','order_by','is_custom','input_select_data','amountchange','is_multiple_required'
     ];
 
    
@@ -32,4 +32,18 @@ class InputMeta extends Model
     {
         return $this->belongsTo(Categories::class,'input_select_data');
     }
+
+    public function multioption()
+    {
+    
+        return $this->hasMany(Multioption::class);
+    }
+
+    public function paymentMeta()
+    {
+        return $this->hasMany(PaymentMeta::class,'meta_value');
+    }
+   
+    
+
 }

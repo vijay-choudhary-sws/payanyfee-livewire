@@ -31,4 +31,6 @@ class Payment extends Model
         return $this->belongsTo(PaymentMode::class,'paymentmode_id');
     }
 
+
+
 }

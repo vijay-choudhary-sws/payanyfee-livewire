@@ -13,6 +13,7 @@ class ExistingSelect extends Component
     public function render()
     {
         $existingdata = $this->in_data->existingselect->posts;
+        // echo"<pre>";print_r($existingdata->toArray());die;
 
         return view('livewire.common.existing-select',compact('existingdata'));
     }

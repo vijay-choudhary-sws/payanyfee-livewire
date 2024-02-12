@@ -14,14 +14,14 @@ class PaymentsettingCreate extends Component
     #[Validate('required')] 
     public $title = '';
  
-    #[Validate('required')] 
-    public $cc_email = '';
+    // #[Validate('required')] 
+    // public $cc_email = '';
 
-    #[Validate('required')] 
-    public $bcc_email = '';
+    // #[Validate('required')] 
+    // public $bcc_email = '';
 
-    #[Validate('required')] 
-    public $email = '';
+    // #[Validate('required')] 
+    // public $email = '';
 
     // #[Validate('required')] 
     // public $input_fields = '';
@@ -65,9 +65,9 @@ class PaymentsettingCreate extends Component
 
             $this->validate([
                 'title' => 'required',
-                'email' => 'required|email',
-                'cc_email' => 'required|email',
-                'bcc_email' => 'required|email',
+                // 'email' => 'required|email',
+                // 'cc_email' => 'required|email',
+                // 'bcc_email' => 'required|email',
                 'status' => 'required',
                 // Add more validation rules for other fields
             ]);
@@ -75,9 +75,9 @@ class PaymentsettingCreate extends Component
             $this->slug = SlugService::createSlug(Paymentsetting::class, 'slug', $this->title);
     
            $lastinsertid = Paymentsetting::create(
-                $this->only(['title', 'slug', 'email', 'cc_email', 'bcc_email', 'status'])
+                $this->only(['title', 'slug', 'status'])
             )->id;
-
+            
             $this->dispatch('toastSuccess', $this->heading.' Create successfully saved.');
     
             return $this->redirect(url('admin/paymentsettings/'.$lastinsertid.'/paymentsettingedit'), navigate: true);
